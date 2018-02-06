@@ -25,24 +25,64 @@
 ##speed increases. There is also an AI snake that tries to eat the apples and
 ##follows you around.
 
-##choose difficulty (easy, medium, hard)? - DONE
-##automatic difficulty would be medium - ???
-##have goals (getting certain num of apples) and gain a boost (freezing AI snake)?
-
 #LEVELS ---
-#if score=5 and score=10, try to get another five apples
-#if score=15 and score=20, add bad apples every time two good apple spawns
-#if score=20 and score=25, add bad apples every time a good apple spawns
-#if score=25 and score=30, add AI snake try to get apples
-#if score=30 and score=35, add AI snake try to get apples and player
-#if score=35 and score=40, add boosts (think about what boosts to add)
-#if score=40 and score=45, add another AI snake
+#if score=5 and score=10, try to get another five apples -- level 1 and 2 -- DONE
+#if score=15 and score=20, add bad apples every time a good apple spawns -- level 3 and 4 -- DONE
+#if score=25 and score=30, add AI snake try to get apples and player -- level 5 and 6
+#if score=35 and score=40, add boosts (think about what boosts to add) -- level 7 and 8
+#if score=45 and score=50, add another AI snake -- level 9 and 10
 
 ##LEVEL NOT WORKING
 
 import pygame,sys
 from pygame.locals import *
 import random
+
+#reference class
+class Basic(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        pygame.sprite.Sprite.__init__(self)
+
+        #snake box
+        self.image=pygame.Surface([snakewidth,snakeheight])
+        self.image.fill(WHITE)
+
+        #location
+        self.rect=self.image.get_rect()
+        self.rect.x=x
+        self.rect.y=y
+
+#player class
+class Snake(Basic):
+    def __init__(self,x,y):
+        super(Snake, self).__init__(x,y)
+
+        self.image.fill(WHITE) #fill white
+        self.x_change = snakewidth + margin
+        self.y_change = 0
+
+#AI class
+class AISnake(Basic):
+    def __init__(self,x,y):
+        super(AISnake,self).__init__(x,y)
+
+        self.image.fill(BLUE)
+        self.a_change = snakewidth + margin
+        self.b_change = 0
+
+#apple class
+class Apple(Basic):
+    def __init__(self,x,y):
+        super(Apple, self).__init__(x,y)
+
+        self.image.fill(RED) #fill red
+
+#bad apple class, comes from snake class
+class BadApple(Basic):
+    def __init__(self,x,y):
+        super(BadApple, self).__init__(x,y)
+
+        self.image.fill(GREEN)
 
 pygame.init()
 pygame.mixer.init()
@@ -71,13 +111,12 @@ beginmusic.set_volume(0.07)
 snakeheight=20
 snakewidth=20
 margin=3
+
 #global variables to help keep track of score
-score=4
-#level=1
+score=0
+level=1
 create=5
 ticker=5
-number=0
-setnum=1
 
 #list to keep track of apples and direction
 Apples=[]
@@ -132,13 +171,6 @@ while (end_it==False):
     startrect.centery = DISPLAYSURF.get_rect().centery
     DISPLAYSURF.blit(startobj, startrect)
 
-##        #level select, blit in center
-##        levelobj=text.render('Select Difficulty',True,GREEN)
-##        levelrect=levelobj.get_rect()
-##        levelrect.centerx=DISPLAYSURF.get_rect().centerx
-##        levelrect.centery=DISPLAYSURF.get_rect().centery+45
-##        DISPLAYSURF.blit(levelobj,levelrect)
-
     #instructions, blit to start screen
     moveobj = text.render('Use WASD to move up and down', True, GREEN)
     moverect = moveobj.get_rect()
@@ -149,67 +181,16 @@ while (end_it==False):
     for event in pygame.event.get():
         #if mousebuttondown or space pressed start game
         if event.type==MOUSEBUTTONDOWN:
-            #end_it=True
-            if startrect.collidepoint(event.pos):
-                end_it=True
-                #print('clicked')
-                beginmusic.stop()
-                bgmusic.play(-1,0)
-                bgmusic.set_volume(0.05)
-                #start()
+            end_it=True
+            #print('clicked')
+            beginmusic.stop()
+            bgmusic.play(-1,0)
+            bgmusic.set_volume(0.05)
         #if quit, exit
         elif event.type==pygame.QUIT:
             pygame.quit()
             sys.exit()
         pygame.display.flip()
-
-#reference class
-class Basic(pygame.sprite.Sprite):
-    def __init__(self,x,y):
-        pygame.sprite.Sprite.__init__(self)
-
-        #snake box
-        self.image=pygame.Surface([snakewidth,snakeheight])
-        self.image.fill(WHITE)
-
-        #location
-        self.rect=self.image.get_rect()
-        self.rect.x=x
-        self.rect.y=y
-
-#player class
-class Snake(Basic):
-    def __init__(self,x,y):
-        super(Snake, self).__init__(x,y)
-
-        self.image.fill(WHITE) #fill white
-        self.x_change = snakewidth + margin
-        self.y_change = 0
-
-#AI class
-class AISnake(Basic):
-    def __init__(self,x,y):
-        super(AISnake,self).__init__(x,y)
-
-        self.image.fill(BLUE)
-        self.a_change = snakewidth + margin
-        self.b_change = 0
-
-#apple class
-class Apple(Basic):
-    def __init__(self,x,y):
-        super(Apple, self).__init__(x,y)
-
-        self.image.fill(RED) #fill red
-
-#bad apple class, comes from snake class
-class BadApple(Basic):
-    def __init__(self,x,y):
-        super(BadApple, self).__init__(x,y)
-
-        self.image.fill(GREEN)
-
-#CLASS FOR LEVELS???
 
 #checks for collision and adds points
 def collision(badsnake,snake, food,pics,sound,backsound,startsound):
@@ -367,6 +348,7 @@ def gameover(gm):
             #if click screen, go to start screen
             if event.type==MOUSEBUTTONDOWN:
                 score = 0
+                level=1
                 gm.stop()
                 start()
             # if quit, exit
@@ -376,10 +358,36 @@ def gameover(gm):
 
         pygame.display.flip()
 
+#sprite list
+all_sprites_list=pygame.sprite.Group()
+#starter snake - player
+snake_segments=[]
+for i in range(3):
+    x=(x_change+margin)*i+5
+    y=35
+    segment=Snake(x,y)
+    #add segment to sprites list and snake list
+    snake_segments.append(segment)
+    all_sprites_list.add(segment)
+#starter snake - AI
+badsnake_segments = []
+for i in range(3):
+    a = (a_change + margin) * i + 5
+    b = 465
+    segment = AISnake(a, b)
+    # add segment to sprites list and badsnake list
+    badsnake_segments.append(segment)
+    #all_sprites_list.add(segment)
+
 def start():
     global score
+    global level
+    global snake_segments
+    global badsnake_segments
     pygame.init()
     pygame.mixer.init()
+
+    end_it=True
 
     #colors
     BG=(0,0,0)
@@ -401,19 +409,14 @@ def start():
     DISPLAYSURF.fill(BG)
     pygame.display.set_caption('Snake')
 
-    #set screen
-    DISPLAYSURF = pygame.display.set_mode((800, 500))
-    DISPLAYSURF.fill(BG)
-    pygame.display.set_caption('Snake')
-    DISPLAYSURF.fill(BG)
     #snake measurements per box
     snakeheight=20
     snakewidth=20
     margin=3
-    # global variables to help keep track of score,death,etc.
+    
+    #global variables to help keep track of score,death,etc.
     create=5
     ticker=5
-    level=1
 
     #list to keep track of apples and direction
     Apples=[]
@@ -429,37 +432,18 @@ def start():
     
     clock=pygame.time.Clock()
 
-    #sprite list
-    all_sprites_list=pygame.sprite.Group()
-    #starter snake - player
-    snake_segments=[]
-    for i in range(3):
-        x=(x_change+margin)*i+5
-        y=35
-        segment=Snake(x,y)
-        #add segment to sprites list and snake list
-        snake_segments.append(segment)
-        all_sprites_list.add(segment)
-    #starter snake - AI
-    badsnake_segments = []
-    for i in range(3):
-        a = (a_change + margin) * i + 5
-        b = 465
-        segment = AISnake(a, b)
-        # add segment to sprites list and badsnake list
-        badsnake_segments.append(segment)
-        #all_sprites_list.add(segment)
-
     while True:
         check(badsnake_segments,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin)  # check lives
         collision(badsnake_segments,snake_segments, Apples,all_sprites_list,bite,bgmusic,beginmusic) #check for collisions with apple
         ##specialcollision(badsnake_segments,snake_segments, BadApples,all_sprites_list,bite) #check for collision with special apple
 
-        if score/level==5:
-            print('level one complete')
+        #for every 5 apples, go to next level
+        if (score/level)==5:
+            #print(score/level)
+            #print('level one complete')
             end_it = False
             while (end_it == False):
-                #blit game over on screen
+                #blit level on screen
                 textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                 overobj = textbasics.render('Level '+str(level)+' Complete', True, RED)
                 overrect = overobj.get_rect()
@@ -480,15 +464,19 @@ def start():
                 DISPLAYSURF.blit(scoreobj, scorerect)
 
                 for event in pygame.event.get():
-                #if click screen, go to start screen
+                    #if click screen, go to start screen
                     if event.type==MOUSEBUTTONDOWN:
-                        #number+=1
-                        start()
+                        level+=1
+                        print(level)
+                        if score>=15:
+                            mediumgame()
+                        else:
+                            start()
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
-                        
+
                 pygame.display.flip()
 
         if create<=0: #if create is less than 0 create new apples
@@ -583,51 +571,103 @@ def start():
 
         create-=1 #subtract from create to keep track of apple spawning
 
-def mediumgame(bgmusic,Apples,BadApples,Direction,AIDirection,beginmusic,bite):
+def mediumgame():
+    global score
+    global level
+    global snake_segments
+    global badsnake_segments
+    pygame.init()
+    pygame.mixer.init()
+
+    end_it=True
+
+    #colors
+    BG=(0,0,0)
+    BROWN=(139,69,19)
+    WHITE=(255,255,255)
+    RED=(255,0,0)
+    GREEN=(0,255,0)
+    BLUE=(0,0,225)
+
+    #load sound
+    bite=pygame.mixer.Sound('bite.wav')
+    bgmusic=pygame.mixer.Sound('playmusic.wav')
+    beginmusic=pygame.mixer.Sound('intromusic.wav')
+    beginmusic.play(-1,0)
+    beginmusic.set_volume(0.07)
+
+    #set screen
+    DISPLAYSURF = pygame.display.set_mode((800, 500))
+    DISPLAYSURF.fill(BG)
+    pygame.display.set_caption('Snake')
+
     #snake measurements per box
     snakeheight=20
     snakewidth=20
     margin=3
-    # global variables to help keep track of score,death,etc.
-    score=0
+    
+    #global variables to help keep track of score,death,etc.
     create=5
     ticker=5
 
     #list to keep track of apples and direction
     Apples=[]
-    ##BadApples=[]
+    BadApples=[]
     Direction=['right']
-    ##AIDirection=['right']
+    AIDirection=['right']
 
     x_change=snakewidth+margin
     y_change=0
 
-    ##a_change = snakewidth + margin
-    ##b_change = 0
-
+    a_change = snakewidth + margin
+    b_change = 0
+    
     clock=pygame.time.Clock()
-
-    #set screen
-    DISPLAYSURF=pygame.display.set_mode((800,500))
-    DISPLAYSURF.fill(BG)
-    pygame.display.set_caption('Snake')
-
-    #sprite list
-    all_sprites_list=pygame.sprite.Group()
-    #starter snake - player
-    snake_segments=[]
-    for i in range(3):
-        x=(x_change+margin)*i+5
-        y=35
-        segment=Snake(x,y)
-        #add segment to sprites list and snake list
-        snake_segments.append(segment)
-        all_sprites_list.add(segment)
 
     while True:
         check(badsnake_segments,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin)  # check lives
-        collision(badsnake_segments,snake_segments, Apples,all_sprites_list,bite,bgmusic) #check for collisions with apple
-        ##specialcollision(badsnake_segments,snake_segments, BadApples,all_sprites_list,bite) #check for collision with special apple
+        collision(badsnake_segments,snake_segments, Apples,all_sprites_list,bite,bgmusic,beginmusic) #check for collisions with apple
+        specialcollision(badsnake_segments,snake_segments, BadApples,all_sprites_list,bite) #check for collision with special apple
+
+        #for every 5 apples, go to next level
+        if (score/level)==5:
+            #print(score/level)
+            #print('level one complete')
+            end_it = False
+            while (end_it == False):
+                #blit level on screen
+                textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
+                overobj = textbasics.render('Level '+str(level)+' Complete', True, RED)
+                overrect = overobj.get_rect()
+                overrect.centerx = DISPLAYSURF.get_rect().centerx
+                overrect.centery = DISPLAYSURF.get_rect().centery - 45
+                DISPLAYSURF.blit(overobj, overrect)
+                #blit the score
+                scoreobj=textbasics.render('Score: '+str(score), True, RED)
+                scorerect=scoreobj.get_rect()
+                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                scorerect.centery=DISPLAYSURF.get_rect().centery
+                DISPLAYSURF.blit(scoreobj, scorerect)
+                #blit play again
+                scoreobj=textbasics.render('Click to Keep Going', True, RED)
+                scorerect=scoreobj.get_rect()
+                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                scorerect.centery=DISPLAYSURF.get_rect().centery+90
+                DISPLAYSURF.blit(scoreobj, scorerect)
+
+                for event in pygame.event.get():
+                    #if click screen, go to start screen
+                    if event.type==MOUSEBUTTONDOWN:
+                        level+=1
+                        if score>=25:
+                            hardgame()
+                        mediumgame()
+                    # if quit, exit
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+
+                pygame.display.flip()
 
         if create<=0: #if create is less than 0 create new apples
             applex=random.randint(0,770)
@@ -736,14 +776,43 @@ def mediumgame(bgmusic,Apples,BadApples,Direction,AIDirection,beginmusic,bite):
 
         create-=1 #subtract from create to keep track of apple spawning
 
-#ORIGINAL VERSION DON'T MESS WITH IT
-def hardgame(bgmusic,Apples,BadApples,Direction,AIDirection,beginmusic,bite):
+def hardgame():
+    print('harder')
+    global score
+    global level
+    global snake_segments
+    global badsnake_segments
+    pygame.init()
+    pygame.mixer.init()
+
+    end_it=True
+
+    #colors
+    BG=(0,0,0)
+    BROWN=(139,69,19)
+    WHITE=(255,255,255)
+    RED=(255,0,0)
+    GREEN=(0,255,0)
+    BLUE=(0,0,225)
+
+    #load sound
+    bite=pygame.mixer.Sound('bite.wav')
+    bgmusic=pygame.mixer.Sound('playmusic.wav')
+    beginmusic=pygame.mixer.Sound('intromusic.wav')
+    beginmusic.play(-1,0)
+    beginmusic.set_volume(0.07)
+
+    #set screen
+    DISPLAYSURF = pygame.display.set_mode((800, 500))
+    DISPLAYSURF.fill(BG)
+    pygame.display.set_caption('Snake')
+
     #snake measurements per box
     snakeheight=20
     snakewidth=20
     margin=3
-    # global variables to help keep track of score,death,etc.
-    score=0
+    
+    #global variables to help keep track of score,death,etc.
     create=5
     ticker=5
 
@@ -758,39 +827,53 @@ def hardgame(bgmusic,Apples,BadApples,Direction,AIDirection,beginmusic,bite):
 
     a_change = snakewidth + margin
     b_change = 0
-
+    
     clock=pygame.time.Clock()
-
-    #set screen
-    DISPLAYSURF=pygame.display.set_mode((800,500))
-    DISPLAYSURF.fill(BG)
-    pygame.display.set_caption('Snake')
-
-    #sprite list
-    all_sprites_list=pygame.sprite.Group()
-    #starter snake - player
-    snake_segments=[]
-    for i in range(3):
-        x=(x_change+margin)*i+5
-        y=35
-        segment=Snake(x,y)
-        #add segment to sprites list and snake list
-        snake_segments.append(segment)
-        all_sprites_list.add(segment)
-    #starter snake - AI
-    badsnake_segments = []
-    for i in range(3):
-        a = (a_change + margin) * i + 5
-        b = 465
-        segment = AISnake(a, b)
-        # add segment to sprites list and badsnake list
-        badsnake_segments.append(segment)
-        all_sprites_list.add(segment)
 
     while True:
         check(badsnake_segments,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin)  # check lives
         collision(badsnake_segments,snake_segments, Apples,all_sprites_list,bite) #check for collisions with apple
         specialcollision(badsnake_segments,snake_segments, BadApples,all_sprites_list,bite) #check for collision with special apple
+
+        #for every 5 apples, go to next level
+        if (score/level)==5:
+            #print(score/level)
+            #print('level one complete')
+            end_it = False
+            while (end_it == False):
+                #blit level on screen
+                textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
+                overobj = textbasics.render('Level '+str(level)+' Complete', True, RED)
+                overrect = overobj.get_rect()
+                overrect.centerx = DISPLAYSURF.get_rect().centerx
+                overrect.centery = DISPLAYSURF.get_rect().centery - 45
+                DISPLAYSURF.blit(overobj, overrect)
+                #blit the score
+                scoreobj=textbasics.render('Score: '+str(score), True, RED)
+                scorerect=scoreobj.get_rect()
+                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                scorerect.centery=DISPLAYSURF.get_rect().centery
+                DISPLAYSURF.blit(scoreobj, scorerect)
+                #blit play again
+                scoreobj=textbasics.render('Click to Keep Going', True, RED)
+                scorerect=scoreobj.get_rect()
+                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                scorerect.centery=DISPLAYSURF.get_rect().centery+90
+                DISPLAYSURF.blit(scoreobj, scorerect)
+
+                for event in pygame.event.get():
+                    #if click screen, go to start screen
+                    if event.type==MOUSEBUTTONDOWN:
+                        level+=1
+                        if score>=25:
+                            hardgame()
+                        mediumgame()
+                    # if quit, exit
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+
+                pygame.display.flip()
 
         if 'up' in AIDirection and 'down' in AIDirection: #determines whether the AI snake will run into itself
             for b in badsnake_segments:
@@ -1054,7 +1137,7 @@ def hardgame(bgmusic,Apples,BadApples,Direction,AIDirection,beginmusic,bite):
         if len(AIDirection)>2:
             AIDirection.pop(0) #keep track of AI direction
                 
-        for s in badsnake_segments:
+        for s in badsnake_segments: #keep AI snake within borders
             if s.rect.y > 500 and s.rect.x < 400:
                 s.rect.y = 480
                 direction = 'right'
