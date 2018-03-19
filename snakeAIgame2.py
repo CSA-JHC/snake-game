@@ -20,10 +20,9 @@
 
 ##Version 0.3
 ##Jessica Chiu
- ##Snake where you have the ability to control a snake and gain points
+##Snake where you have the ability to control a snake and gain points
 ##by eating the red apples. The green apples makes you lose a point and
-##speed increases. There is also an AI snake that tries to eat the apples and
-##follows you around.
+##speed increases. Levels increase based on the amount of points you have.
 
 #LEVELS ---
 #if 0-5 and 5-10, try to get another five apples -- level 1 and 2 -- DONE
@@ -32,16 +31,19 @@
 #if 30-35 and 35-40, add obstacles (think about what boosts to add) -- level 7 and 8 -- DONE
 #if 40-45 and 45-50, add another AI snake -- level 9 and 10 -- DONE
 
-##add boosts - extra points?
-##work on quit ability (at game over and after each level)
-    #mouse position
-##set goals for each level
-##make apples spawn faster
-##fix audio
+#BUGS ---
+#add boosts -- extra points?
+#instructions -- DONE
+#work on quit ability (at game over and after each level) -- DONE
+#make apples spawn faster -- DONE
+#fix AI snake and border collision
+#fix audio
+#blit goals for each level?
 
 import pygame,sys
 from pygame.locals import *
 import random
+import time
 
 pygame.init()
 pygame.mixer.init()
@@ -209,24 +211,8 @@ def specialcollision(badsnake,snake,food,pics,sound):
                 ticker+=0.5
 
 #checks for collision and adds points
-def collision2(badsnake,snake, food,pics,sound):
+def collision2(badsnake,food,pics,sound):
     global score
-    for s in snake:
-        for a in food:
-            #if collided with red apple
-            if s.rect.colliderect(a):
-                sound.play() #play sound
-                #remove from lists
-                food.remove(a)
-                pics.remove(a)
-                #add new box on snake
-                x = (x_change + margin)
-                y = 30
-                segment = Snake(x, y)
-                #add to lists
-                snake.append(segment)
-                pics.add(segment)
-                score+=1 #add a point
     for s in badsnake:
         for a in food:
             #if collided with red apple
@@ -243,21 +229,9 @@ def collision2(badsnake,snake, food,pics,sound):
                 badsnake.append(segment)
                 pics.add(segment)
 
-def specialcollision2(badsnake,snake,food,pics,sound):
+def specialcollision2(badsnake,food,pics,sound):
     global score
     global ticker
-    for s in snake:
-        for a in food:
-            if s.rect.colliderect(a): #if snake collides with green apple
-                sound.play() #play sound
-                #remove apple from list and sprites list
-                food.remove(a)
-                pics.remove(a)
-                #remove box on snake
-                snake=snake.pop() #remove end of snake from list and sprites list
-                pics.remove(snake)
-                score-=1 #-1 from score
-                ticker+=0.5
     for s in badsnake:
         for a in food:
             if s.rect.colliderect(a): #if snake collides with green apple
@@ -271,11 +245,7 @@ def specialcollision2(badsnake,snake,food,pics,sound):
                 #enemyscore-=1 #-1 from score
                 ticker+=0.5
 
-def boostcollision():
-    print('ai snake freezes')
-def boostcollision2():
-    print('player loses one point')
-
+#create obstacles
 def obstacles(obstlist,spriteslist):
     #one
     rectx=50
@@ -422,6 +392,7 @@ def obstacles(obstlist,spriteslist):
     obstlist.append(obst)
     spriteslist.add(obst)
 
+#check obstacle collision
 def obstaclecollision(snake,music,route,a,b,obstlist):
     global score
     global ticker
@@ -430,7 +401,8 @@ def obstaclecollision(snake,music,route,a,b,obstlist):
         for i in obstlist:
             if s.rect.colliderect(i):
                 gameover(music)
-        
+
+#check the borders and snake to snake collisions
 def check(badsnake,snake,route,pics,music,badroute,x,y,sm,w):
     dead=False #keeps track whether or not he's dead
     for s in snake: #if he goes past the borders set dead to true
@@ -484,7 +456,8 @@ def checkAI2(badsnake, snake,route,pics,music,badroute,x,y,sm,w):
         gameover(music)
     elif 'up' in route and 'down' in route:
         gameover(music)
-                
+
+#check for gameover with length of snake          
 def gameover(gm):
     global score
     global level
@@ -542,7 +515,7 @@ def gameover(gm):
         scorerect.centerx=DISPLAYSURF.get_rect().centerx
         scorerect.centery=DISPLAYSURF.get_rect().centery+90
         DISPLAYSURF.blit(scoreobj, scorerect)
-        #quit
+        #blit quit
         quitobj=textbasics.render('QUIT', True, GREEN)
         quitrect=quitobj.get_rect()
         quitrect.centerx=DISPLAYSURF.get_rect().centerx
@@ -554,14 +527,16 @@ def gameover(gm):
             if event.type==MOUSEBUTTONDOWN:
                 #find position of mouse
                 #if mouse says click again
-                pygame.mouse.get_pos()
-                
-                score = 0
-                level=1
-                gm.stop()
-                start()
+                x,y=pygame.mouse.get_pos()
+                if x>250 and x<550 and y>310 and y<355:
+                    score = 0
+                    level=1
+                    gm.stop()
+                    start()
                 #if mouse says quit
-                #then pygame.quit(), sys.exit()
+                if x>355 and x<445 and y>365 and y<400:
+                    pygame.quit()
+                    sys.exit()
             # if quit, exit
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -569,7 +544,7 @@ def gameover(gm):
 
         pygame.display.flip()
 
-def start():
+def start(): #start screen
     global score
     pygame.init()
     pygame.mixer.init()
@@ -631,6 +606,7 @@ def start():
             scores.append(int(line))
         blitscore=scores[0]
 
+        textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
         #highscore font, blit in center
         overobj = text.render('HIGHSCORE: '+str(blitscore), True, RED)
         overrect = overobj.get_rect()
@@ -659,28 +635,134 @@ def start():
         startrect.centery = DISPLAYSURF.get_rect().centery
         DISPLAYSURF.blit(startobj, startrect)
 
-        #instructions, blit to start screen
-        moveobj = text.render('Use WASD to move up and down', True, GREEN)
-        moverect = moveobj.get_rect()
-        moverect.centerx = DISPLAYSURF.get_rect().centerx
-        moverect.centery = DISPLAYSURF.get_rect().centery+90
-        DISPLAYSURF.blit(moveobj, moverect)
+        #instructions, blit to center
+        instobj=text.render('Instructions',True, GREEN)
+        instrect=instobj.get_rect()
+        instrect.centerx=DISPLAYSURF.get_rect().centerx
+        instrect.centery=DISPLAYSURF.get_rect().centery+45
+        DISPLAYSURF.blit(instobj,instrect)
+
+        #blit quit
+        quitobj=textbasics.render('QUIT', True, GREEN)
+        quitrect=quitobj.get_rect()
+        quitrect.centerx=DISPLAYSURF.get_rect().centerx
+        quitrect.centery=DISPLAYSURF.get_rect().centery+135
+        DISPLAYSURF.blit(quitobj, quitrect)
+
+##        #instructions, blit to start screen
+##        moveobj = text.render('Use WASD to move up and down', True, GREEN)
+##        moverect = moveobj.get_rect()
+##        moverect.centerx = DISPLAYSURF.get_rect().centerx
+##        moverect.centery = DISPLAYSURF.get_rect().centery+135
+##        DISPLAYSURF.blit(moveobj, moverect)
 
         for event in pygame.event.get():
             #if mousebuttondown or space pressed start game
             if event.type==MOUSEBUTTONDOWN:
-                end_it=True
-                beginmusic.stop()
-                bgmusic.play(-1,0)
-                bgmusic.set_volume(0.05)
-                easygame()
+                x,y=pygame.mouse.get_pos()
+                #310,490
+                #230,265
+                if x>310 and x<490 and y>230 and y<265:
+                    end_it=True
+                    beginmusic.stop()
+                    bgmusic.play(-1,0)
+                    bgmusic.set_volume(0.05)
+                    easygame()                    
+                #305,495
+                #275,310
+                if x>305 and x<495 and y>275 and y<310:
+                    end_it=True
+                    instructions()
+                if x>355 and x<445 and y>365 and y<400:
+                    pygame.quit()
+                    sys.exit()        
             #if quit, exit
             elif event.type==pygame.QUIT:
                 pygame.quit()
                 sys.exit()
         pygame.display.flip()
 
-def easygame():
+def instructions():
+    pygame.init()
+    pygame.mixer.init()
+
+    #colors
+    BG=(0,0,0)
+    WHITE=(255,255,255)
+
+    #set screen
+    DISPLAYSURF = pygame.display.set_mode((800, 500))
+    DISPLAYSURF.fill(BG)
+    pygame.display.set_caption('Snake')
+
+    #load sound
+    bite=pygame.mixer.Sound('bite.wav')
+    bgmusic=pygame.mixer.Sound('playmusic.wav')
+    beginmusic=pygame.mixer.Sound('intromusic.wav')
+    beginmusic.play(-1,0)
+    beginmusic.set_volume(0.07)
+
+    end_it=False
+    while (end_it==False):
+
+        text = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
+
+        #instructions, blit to start screen
+        titleobj = text.render('INSTRUCTIONS', True, WHITE)
+        titlerect = titleobj.get_rect()
+        titlerect.centerx = DISPLAYSURF.get_rect().centerx
+        titlerect.centery = DISPLAYSURF.get_rect().centery-180
+        DISPLAYSURF.blit(titleobj, titlerect)
+        
+        moveobj = text.render('1. Use WASD to move up and down', True, WHITE)
+        moverect = moveobj.get_rect()
+        moverect.centerx = DISPLAYSURF.get_rect().centerx
+        moverect.centery = DISPLAYSURF.get_rect().centery-135
+        DISPLAYSURF.blit(moveobj, moverect)
+
+        goalobj = text.render('2. Try to get five points (or apples) per level', True, WHITE)
+        goalrect = moveobj.get_rect()
+        goalrect.centerx = DISPLAYSURF.get_rect().centerx-45
+        goalrect.centery = DISPLAYSURF.get_rect().centery-90
+        DISPLAYSURF.blit(goalobj, goalrect)
+
+        appleobj = text.render('3. Green Apples reduce points and red apples increase points', True, WHITE)
+        applerect = moveobj.get_rect()
+        applerect.centerx = DISPLAYSURF.get_rect().centerx-160
+        applerect.centery = DISPLAYSURF.get_rect().centery-45
+        DISPLAYSURF.blit(appleobj, applerect)
+        
+        AIobj = text.render('4. AI Snakes will try to eat apples and will chase you', True, WHITE)
+        AIrect = moveobj.get_rect()
+        AIrect.centerx = DISPLAYSURF.get_rect().centerx-90
+        AIrect.centery = DISPLAYSURF.get_rect().centery
+        DISPLAYSURF.blit(AIobj, AIrect)
+        
+        levelobj = text.render('5. Difficulty increases by level!', True, WHITE)
+        levelrect = moveobj.get_rect()
+        levelrect.centerx = DISPLAYSURF.get_rect().centerx
+        levelrect.centery = DISPLAYSURF.get_rect().centery+45
+        DISPLAYSURF.blit(levelobj, levelrect)
+
+        backobj=text.render('Click to go Back',True,WHITE)
+        backrect=backobj.get_rect()
+        backrect.centerx=DISPLAYSURF.get_rect().centerx
+        backrect.centery=DISPLAYSURF.get_rect().centery+135
+        DISPLAYSURF.blit(backobj,backrect)
+
+        for event in pygame.event.get():
+            #if click screen, go to start screen
+            if event.type==MOUSEBUTTONDOWN:
+                end_it=True
+                start()
+            # if quit, exit
+            elif event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        pygame.display.flip()
+
+def easygame(): #level 1 and 2
     global score
     global level
     global create
@@ -693,13 +775,15 @@ def easygame():
     bite=pygame.mixer.Sound('bite.wav')
     bgmusic=pygame.mixer.Sound('playmusic.wav')
     beginmusic=pygame.mixer.Sound('intromusic.wav')
-    beginmusic.play(-1,0)
-    beginmusic.set_volume(0.07)
+    bgmusic.play(-1,0)
+    bgmusic.set_volume(0.05)
 
     #snake measurements per box
     snakeheight=20
     snakewidth=20
     margin=3
+    create=5
+    z=1
 
     #list to keep track of apples and direction
     Apples=[]
@@ -745,8 +829,8 @@ def easygame():
         # add segment to sprites list and badsnake list
         badsnake_segments.append(segment)
         #all_sprites_list.add(segment)
-        
-    while True:
+    
+    while True:            
         check(badsnake_segments,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin)  # check lives
         collision(badsnake_segments,snake_segments, Apples,all_sprites_list,bite) #check for collisions with apple
         specialcollision(badsnake_segments,snake_segments, BadApples,all_sprites_list,bite) #check for collision with special apple
@@ -771,22 +855,34 @@ def easygame():
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                scoreobj=textbasics.render('Click to Keep Going', True, RED)
-                scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
-                scorerect.centery=DISPLAYSURF.get_rect().centery+90
-                DISPLAYSURF.blit(scoreobj, scorerect)
+                againobj=textbasics.render('Click to Keep Going', True, RED)
+                againrect=againobj.get_rect()
+                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centery=DISPLAYSURF.get_rect().centery+90
+                DISPLAYSURF.blit(againobj, againrect)
+                #blit quit
+                quitobj=textbasics.render('QUIT', True, GREEN)
+                quitrect=quitobj.get_rect()
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centery=DISPLAYSURF.get_rect().centery+135
+                DISPLAYSURF.blit(quitobj, quitrect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
                     if event.type==MOUSEBUTTONDOWN:
-                        end_it=True
-                        level+=1
-                        #print(level)
-                        if score>=10:
-                            mediumgame()
-                        else:
-                            easygame()
+                        #if mouse says click again
+                        x,y=pygame.mouse.get_pos()
+                        if x>250 and x<550 and y>310 and y<355:
+                            end_it=True
+                            level+=1
+                            if score>=10:
+                                mediumgame()
+                            else:
+                                easygame()
+                        #if mouse says quit
+                        if x>355 and x<445 and y>365 and y<400:
+                            pygame.quit()
+                            sys.exit()
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -797,10 +893,6 @@ def easygame():
         if create<=0: #if create is less than 0 create new apples
             applex=random.randint(0,770)
             appley=random.randint(0,470)
-##            if applex==30:
-##                applex=30
-##            if appley==45:
-##                appley=45
             for s in snake_segments:
                 if applex==s.rect.x:
                     applex+=15
@@ -814,7 +906,7 @@ def easygame():
             apple=Apple(applex,appley)
             Apples.append(apple)
             all_sprites_list.add(apple)
-            create=50
+            create=30
 
         for event in pygame.event.get(): #if quit, quit
             if event.type==QUIT:
@@ -883,7 +975,7 @@ def easygame():
 
         create-=1 #subtract from create to keep track of apple spawning
 
-def mediumgame():
+def mediumgame(): #level 3 and 4
     global score
     global level
     global create
@@ -896,13 +988,14 @@ def mediumgame():
     bite=pygame.mixer.Sound('bite.wav')
     bgmusic=pygame.mixer.Sound('playmusic.wav')
     beginmusic=pygame.mixer.Sound('intromusic.wav')
-    beginmusic.play(-1,0)
-    beginmusic.set_volume(0.07)
+    bgmusic.play(-1,0)
+    bgmusic.set_volume(0.05)
 
     #snake measurements per box
     snakeheight=20
     snakewidth=20
     margin=3
+    create=5
 
     #list to keep track of apples and direction
     Apples=[]
@@ -974,22 +1067,35 @@ def mediumgame():
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                scoreobj=textbasics.render('Click to Keep Going', True, RED)
-                scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
-                scorerect.centery=DISPLAYSURF.get_rect().centery+90
-                DISPLAYSURF.blit(scoreobj, scorerect)
+                againobj=textbasics.render('Click to Keep Going', True, RED)
+                againrect=againobj.get_rect()
+                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centery=DISPLAYSURF.get_rect().centery+90
+                DISPLAYSURF.blit(againobj, againrect)
+                #blit quit
+                quitobj=textbasics.render('QUIT', True, GREEN)
+                quitrect=quitobj.get_rect()
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centery=DISPLAYSURF.get_rect().centery+135
+                DISPLAYSURF.blit(quitobj, quitrect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
                     if event.type==MOUSEBUTTONDOWN:
-                        end_it=True
-                        level+=1
-                        #print(level)
-                        if score>=20:
-                            hardgame()
-                        else:
-                            mediumgame()
+                        #if mouse says click again
+                        x,y=pygame.mouse.get_pos()
+                        if x>250 and x<550 and y>310 and y<355:
+                            end_it=True
+                            level+=1
+                            #print(level)
+                            if score>=20:
+                                hardgame()
+                            else:
+                                mediumgame()
+                        #if mouse says quit
+                        if x>355 and x<445 and y>365 and y<400:
+                            pygame.quit()
+                            sys.exit()
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -1000,10 +1106,6 @@ def mediumgame():
         if create<=0: #if create is less than 0 create new apples
             applex=random.randint(0,770)
             appley=random.randint(0,470)
-##            if applex==30:
-##                applex=30
-##            if appley==45:
-##                appley=45
             for s in snake_segments:
                 if applex==s.rect.x:
                     applex+=15
@@ -1017,15 +1119,11 @@ def mediumgame():
             apple=Apple(applex,appley)
             Apples.append(apple)
             all_sprites_list.add(apple)
-            create=50
+            create=30
 
-        if create==25: #when create is 25, add special reduction apple
+        if create==15: #when create is 25, add special reduction apple
             applex = random.randint(0, 770)
             appley = random.randint(0, 470)
-##            if applex == 30:
-##                applex = 30
-##            if appley == 45:
-##                appley = 45
             for s in snake_segments:
                 if applex==s.rect.x:
                     applex+=15
@@ -1107,7 +1205,7 @@ def mediumgame():
 
         create-=1 #subtract from create to keep track of apple spawning
 
-def hardgame():
+def hardgame(): #level 5 and 6
     global score
     global level
     global create
@@ -1120,13 +1218,14 @@ def hardgame():
     bite=pygame.mixer.Sound('bite.wav')
     bgmusic=pygame.mixer.Sound('playmusic.wav')
     beginmusic=pygame.mixer.Sound('intromusic.wav')
-    beginmusic.play(-1,0)
-    beginmusic.set_volume(0.07)
+    bgmusic.play(-1,0)
+    bgmusic.set_volume(0.05)
 
     #snake measurements per box
     snakeheight=20
     snakewidth=20
     margin=3
+    create=5
 
     #list to keep track of apples and direction
     Apples=[]
@@ -1182,22 +1281,22 @@ def hardgame():
 ##        badsnake_segments2.append(segment)
 ##        #all_sprites_list.add(segment)
 
-    #spawn special apple - AI snake freezes for 5sec
-    applex=random.randint(0,770)
-    appley=random.randint(0,470)
-    for s in snake_segments:
-        if applex==s.rect.x:
-            applex+=15
-        if appley==s.rect.y:
-            appley+=15
-    for s in badsnake_segments:
-        if applex==s.rect.x:
-            applex+=15
-        if appley==s.rect.y:
-            appley+=15            
-    apple=BoostApple(applex,appley)
-    Boost.append(apple)
-    all_sprites_list.add(apple)
+##    #spawn special apple - AI snake freezes for 5sec
+##    applex=random.randint(0,770)
+##    appley=random.randint(0,470)
+##    for s in snake_segments:
+##        if applex==s.rect.x:
+##            applex+=15
+##        if appley==s.rect.y:
+##            appley+=15
+##    for s in badsnake_segments:
+##        if applex==s.rect.x:
+##            applex+=15
+##        if appley==s.rect.y:
+##            appley+=15            
+##    apple=BoostApple(applex,appley)
+##    Boost.append(apple)
+##    all_sprites_list.add(apple)
 
     while True:
         check(badsnake_segments,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin)  # check lives
@@ -1225,22 +1324,35 @@ def hardgame():
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                scoreobj=textbasics.render('Click to Keep Going', True, RED)
-                scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
-                scorerect.centery=DISPLAYSURF.get_rect().centery+90
-                DISPLAYSURF.blit(scoreobj, scorerect)
+                againobj=textbasics.render('Click to Keep Going', True, RED)
+                againrect=againobj.get_rect()
+                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centery=DISPLAYSURF.get_rect().centery+90
+                DISPLAYSURF.blit(againobj, againrect)
+                #blit quit
+                quitobj=textbasics.render('QUIT', True, GREEN)
+                quitrect=quitobj.get_rect()
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centery=DISPLAYSURF.get_rect().centery+135
+                DISPLAYSURF.blit(quitobj, quitrect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
                     if event.type==MOUSEBUTTONDOWN:
-                        end_it=True
-                        level+=1
-                        #print(level)
-                        if score>=30:
-                            print('yeet')
-                        else:
-                            obstaclegame()
+                        #if mouse says click again
+                        x,y=pygame.mouse.get_pos()
+                        if x>250 and x<550 and y>310 and y<355:
+                            end_it=True
+                            level+=1
+                            #print(level)
+                            if score>=30:
+                                obstaclegame()
+                            else:
+                                hardgame()
+                        #if mouse says quit
+                        if x>355 and x<445 and y>365 and y<400:
+                            pygame.quit()
+                            sys.exit()
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -1303,10 +1415,6 @@ def hardgame():
         if create<=0: #if create is less than 0 create new apples
             applex=random.randint(0,770)
             appley=random.randint(0,470)
-##            if applex==30:
-##                applex=30
-##            if appley==45:
-##                appley=45
             for s in snake_segments:
                 if applex==s.rect.x:
                     applex+=15
@@ -1320,15 +1428,11 @@ def hardgame():
             apple=Apple(applex,appley)
             Apples.append(apple)
             all_sprites_list.add(apple)
-            create=50
+            create=30
 
-        if create==25: #when create is 25, add special reduction apple
+        if create==15: #when create is 25, add special reduction apple
             applex = random.randint(0, 770)
             appley = random.randint(0, 470)
-##            if applex == 30:
-##                applex = 30
-##            if appley == 45:
-##                appley = 45
             for s in snake_segments:
                 if applex==s.rect.x:
                     applex+=15
@@ -1593,17 +1697,31 @@ def hardgame():
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                scoreobj=textbasics.render('Click to Play Again', True, RED)
-                scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
-                scorerect.centery=DISPLAYSURF.get_rect().centery+90
-                DISPLAYSURF.blit(scoreobj, scorerect)
+                againobj=textbasics.render('Click to Play Again', True, RED)
+                againrect=againobj.get_rect()
+                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centery=DISPLAYSURF.get_rect().centery+90
+                DISPLAYSURF.blit(againobj, againrect)
+                #blit quit
+                quitobj=textbasics.render('QUIT', True, GREEN)
+                quitrect=quitobj.get_rect()
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centery=DISPLAYSURF.get_rect().centery+135
+                DISPLAYSURF.blit(quitobj, quitrect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
                     if event.type==MOUSEBUTTONDOWN:
-                        bgmusic.stop()
-                        start()
+                        #find position of mouse
+                        #if mouse says click again
+                        x,y=pygame.mouse.get_pos()
+                        if x>250 and x<550 and y>310 and y<355:
+                            bgmusic.stop()
+                            start()
+                        #if mouse says quit
+                        if x>355 and x<445 and y>365 and y<400:
+                            pygame.quit()
+                            sys.exit()
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -1652,7 +1770,7 @@ def hardgame():
         create-=1 #subtract from create to keep track of apple spawning
         #print(AIDirection)
 
-def obstaclegame():
+def obstaclegame(): #level 7 and 8
     global score
     global level
     global create
@@ -1665,13 +1783,14 @@ def obstaclegame():
     bite=pygame.mixer.Sound('bite.wav')
     bgmusic=pygame.mixer.Sound('playmusic.wav')
     beginmusic=pygame.mixer.Sound('intromusic.wav')
-    beginmusic.play(-1,0)
-    beginmusic.set_volume(0.07)
+    bgmusic.play(-1,0)
+    bgmusic.set_volume(0.05)
 
     #snake measurements per box
     snakeheight=20
     snakewidth=20
     margin=3
+    create=5
 
     #list to keep track of apples and direction
     Apples=[]
@@ -1728,30 +1847,30 @@ def obstaclegame():
 ##        badsnake_segments2.append(segment)
 ##        #all_sprites_list.add(segment)
 
-    #spawn special apple - freezes AI snake for 5sec
-    applex=random.randint(0,770)
-    appley=random.randint(0,470)
-    for s in snake_segments:
-        if applex==s.rect.x:
-            applex+=15
-        if appley==s.rect.y:
-            appley+=15
-    for s in badsnake_segments:
-        if applex==s.rect.x:
-            applex+=15
-        if appley==s.rect.y:
-            appley+=15            
-    apple=BoostApple(applex,appley)
-    Boost.append(apple)
-    all_sprites_list.add(apple)
+##    #spawn special apple - freezes AI snake for 5sec
+##    applex=random.randint(0,770)
+##    appley=random.randint(0,470)
+##    for s in snake_segments:
+##        if applex==s.rect.x:
+##            applex+=15
+##        if appley==s.rect.y:
+##            appley+=15
+##    for s in badsnake_segments:
+##        if applex==s.rect.x:
+##            applex+=15
+##        if appley==s.rect.y:
+##            appley+=15            
+##    apple=BoostApple(applex,appley)
+##    Boost.append(apple)
+##    all_sprites_list.add(apple)
 
     while True:
-        obstacles(Obst,all_sprites_list)
+        obstacles(Obst,all_sprites_list) #create obstacles
         check(badsnake_segments,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin)  # check lives
         #checkAI2(badsnake_segments2,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin)
         collision(badsnake_segments,snake_segments, Apples,all_sprites_list,bite) #check for collisions with apple
         specialcollision(badsnake_segments,snake_segments, BadApples,all_sprites_list,bite) #check for collision with special apple
-        obstaclecollision(snake_segments,bgmusic,AIDirection,a_change,b_change,Obst)
+        obstaclecollision(snake_segments,bgmusic,AIDirection,a_change,b_change,Obst) #check collision with snake and obstacle
 
         #for every 5 apples, go to next level
         if (score/level)==5:
@@ -1773,22 +1892,35 @@ def obstaclegame():
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                scoreobj=textbasics.render('Click to Keep Going', True, RED)
-                scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
-                scorerect.centery=DISPLAYSURF.get_rect().centery+90
-                DISPLAYSURF.blit(scoreobj, scorerect)
+                againobj=textbasics.render('Click to Keep Going', True, RED)
+                againrect=againobj.get_rect()
+                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centery=DISPLAYSURF.get_rect().centery+90
+                DISPLAYSURF.blit(againobj, againrect)
+                #blit quit
+                quitobj=textbasics.render('QUIT', True, GREEN)
+                quitrect=quitobj.get_rect()
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centery=DISPLAYSURF.get_rect().centery+135
+                DISPLAYSURF.blit(quitobj, quitrect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
                     if event.type==MOUSEBUTTONDOWN:
-                        end_it=True
-                        level+=1
-                        #print(level)
-                        if score>=30:
-                            print('yeet')
-                        else:
-                            hardobstaclegame()
+                        #if mouse says click again
+                        x,y=pygame.mouse.get_pos()
+                        if x>250 and x<550 and y>310 and y<355:
+                            end_it=True
+                            level+=1
+                            #print(level)
+                            if score>=40:
+                                hardobstaclegame()
+                            else:
+                                obstaclegame()
+                        #if mouse says quit
+                        if x>355 and x<445 and y>365 and y<400:
+                            pygame.quit()
+                            sys.exit()
                     #if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -1864,9 +1996,9 @@ def obstaclegame():
             apple=Apple(applex,appley)
             Apples.append(apple)
             all_sprites_list.add(apple)
-            create=50
+            create=30
 
-        if create==25: #when create is 25, add special reduction apple
+        if create==15: #when create is 25, add special reduction apple
             applex = random.randint(0, 770)
             appley = random.randint(0, 470)
             for s in snake_segments:
@@ -1889,7 +2021,7 @@ def obstaclegame():
             all_sprites_list.add(apple)        
 
 
-        for i in Obst:
+        for i in Obst: #check for obstacle collision with apples
             for a in Apples:
                 if i.rect.colliderect(a):
                     all_sprites_list.remove(a)
@@ -2333,8 +2465,6 @@ def obstaclegame():
         all_sprites_list.remove(old_segment)
         old_segment=badsnake_segments.pop()
         all_sprites_list.remove(old_segment)
-##        old_segment=badsnake_segments2.pop()
-##        all_sprites_list.remove(old_segment)
 
         if len(badsnake_segments)<=0: #or len(badsnake_segments2)<=0:
             end_it = False
@@ -2376,17 +2506,31 @@ def obstaclegame():
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                scoreobj=textbasics.render('Click to Play Again', True, RED)
-                scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
-                scorerect.centery=DISPLAYSURF.get_rect().centery+90
-                DISPLAYSURF.blit(scoreobj, scorerect)
+                againobj=textbasics.render('Click to Play Again', True, RED)
+                againrect=againobj.get_rect()
+                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centery=DISPLAYSURF.get_rect().centery+90
+                DISPLAYSURF.blit(againobj, againrect)
+                #blit quit
+                quitobj=textbasics.render('QUIT', True, GREEN)
+                quitrect=quitobj.get_rect()
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centery=DISPLAYSURF.get_rect().centery+135
+                DISPLAYSURF.blit(quitobj, quitrect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
                     if event.type==MOUSEBUTTONDOWN:
-                        bgmusic.stop()
-                        start()
+                        #find position of mouse
+                        #if mouse says click again
+                        x,y=pygame.mouse.get_pos()
+                        if x>250 and x<550 and y>310 and y<355:
+                            bgmusic.stop()
+                            start()
+                        #if mouse says quit
+                        if x>355 and x<445 and y>365 and y<400:
+                            pygame.quit()
+                            sys.exit()
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -2399,13 +2543,6 @@ def obstaclegame():
             # add new box onto list
             badsnake_segments.insert(0, badsegment)
             all_sprites_list.add(badsegment)
-
-##            x = badsnake_segments2[0].rect.x + f_change
-##            y = badsnake_segments2[0].rect.y + g_change
-##            badsegment = AISnake(x, y)
-##            # add new box onto list
-##            badsnake_segments2.insert(0, badsegment)
-##            all_sprites_list.add(badsegment)
 
         if len(snake_segments)<=0:
             gameover(bgmusic)
@@ -2441,7 +2578,7 @@ def obstaclegame():
 
         create-=1 #subtract from create to keep track of apple spawning
 
-def hardobstaclegame():
+def hardobstaclegame(): #level 9 and 10
     global score
     global level
     global create
@@ -2454,13 +2591,14 @@ def hardobstaclegame():
     bite=pygame.mixer.Sound('bite.wav')
     bgmusic=pygame.mixer.Sound('playmusic.wav')
     beginmusic=pygame.mixer.Sound('intromusic.wav')
-    beginmusic.play(-1,0)
-    beginmusic.set_volume(0.07)
+    bgmusic.play(-1,0)
+    bgmusic.set_volume(0.05)
 
     #snake measurements per box
     snakeheight=20
     snakewidth=20
     margin=3
+    create=5
 
     #list to keep track of apples and direction
     Apples=[]
@@ -2518,32 +2656,32 @@ def hardobstaclegame():
         badsnake_segments2.append(segment)
         all_sprites_list.add(segment)
 
-    #spawn special apple - freezes both AI snakes for 5sec
-    applex=random.randint(0,770)
-    appley=random.randint(0,470)
-    for s in snake_segments:
-        if applex==s.rect.x:
-            applex+=15
-        if appley==s.rect.y:
-            appley+=15
-    for s in badsnake_segments:
-        if applex==s.rect.x:
-            applex+=15
-        if appley==s.rect.y:
-            appley+=15            
-    apple=BoostApple(applex,appley)
-    Boost.append(apple)
-    all_sprites_list.add(apple)
+##    #spawn special apple - freezes both AI snakes for 5sec
+##    applex=random.randint(0,770)
+##    appley=random.randint(0,470)
+##    for s in snake_segments:
+##        if applex==s.rect.x:
+##            applex+=15
+##        if appley==s.rect.y:
+##            appley+=15
+##    for s in badsnake_segments:
+##        if applex==s.rect.x:
+##            applex+=15
+##        if appley==s.rect.y:
+##            appley+=15            
+##    apple=BoostApple(applex,appley)
+##    Boost.append(apple)
+##    all_sprites_list.add(apple)
 
     while True:
         obstacles(Obst,all_sprites_list)
         check(badsnake_segments,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin)  # check lives
-        checkAI2(badsnake_segments2,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin)
+        checkAI2(badsnake_segments2,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin) #check lives with second AI
         collision(badsnake_segments,snake_segments, Apples,all_sprites_list,bite) #check for collisions with apple
-        collision2(badsnake_segments2,snake_segments, Apples,all_sprites_list,bite)
+        collision2(badsnake_segments2,Apples,all_sprites_list,bite) #check second snake for collision with apple
         specialcollision(badsnake_segments,snake_segments, BadApples,all_sprites_list,bite) #check for collision with special apple
-        specialcollision(badsnake_segments2,snake_segments, BadApples,all_sprites_list,bite)
-        obstaclecollision(snake_segments,bgmusic,AIDirection,a_change,b_change,Obst)
+        specialcollision2(badsnake_segments2,BadApples,all_sprites_list,bite) #check second snake for collision with special apple
+        obstaclecollision(snake_segments,bgmusic,AIDirection,a_change,b_change,Obst) #check snake_segments collision with obstacle
 
         #for every 5 apples, go to next level
         if (score/level)==5:
@@ -2565,22 +2703,49 @@ def hardobstaclegame():
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                scoreobj=textbasics.render('Click to Keep Going', True, RED)
-                scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
-                scorerect.centery=DISPLAYSURF.get_rect().centery+90
-                DISPLAYSURF.blit(scoreobj, scorerect)
+                againobj=textbasics.render('Click to Keep Going', True, RED)
+                againrect=againobj.get_rect()
+                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centery=DISPLAYSURF.get_rect().centery+90
+                DISPLAYSURF.blit(againobj, againrect)
+                #blit quit
+                quitobj=textbasics.render('QUIT', True, GREEN)
+                quitrect=quitobj.get_rect()
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centery=DISPLAYSURF.get_rect().centery+135
+                DISPLAYSURF.blit(quitobj, quitrect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
                     if event.type==MOUSEBUTTONDOWN:
-                        end_it=True
-                        level+=1
-                        #print(level)
-                        if score>=30:
-                            print('yeet')
-                        else:
-                            hardobstaclegame()
+                        #if mouse says click again
+                        x,y=pygame.mouse.get_pos()
+                        if x>250 and x<550 and y>310 and y<355:
+                            end_it=True
+                            level+=1
+                            #print(level)
+                            if score>=50:
+                                winobj=textbasics.render('You Win!', True, RED)
+                                winrect=winobj.get_rect()
+                                winrect.centerx=DISPLAYSURF.get_rect().centerx
+                                winrect.centery=DISPLAYSURF.get_rect().centery-45
+                                DISPLAYSURF.blit(winobj, winrect)
+                                scoreobj=textbasics.render('Score: '+str(score), True, RED)
+                                scorerect=scoreobj.get_rect()
+                                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                                scorerect.centery=DISPLAYSURF.get_rect().centery
+                                DISPLAYSURF.blit(scoreobj, scorerect)
+                                quitobj=textbasics.render('QUIT', True, GREEN)
+                                quitrect=quitobj.get_rect()
+                                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                                quitrect.centery=DISPLAYSURF.get_rect().centery+90
+                                DISPLAYSURF.blit(quitobj, quitrect)
+                            else:
+                                hardobstaclegame()
+                        #if mouse says quit
+                        if x>355 and x<445 and y>365 and y<400:
+                            pygame.quit()
+                            sys.exit()
                     #if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -2704,9 +2869,9 @@ def hardobstaclegame():
             apple=Apple(applex,appley)
             Apples.append(apple)
             all_sprites_list.add(apple)
-            create=50
+            create=30
 
-        if create==25: #when create is 25, add special reduction apple
+        if create==15: #when create is 25, add special reduction apple
             applex = random.randint(0, 770)
             appley = random.randint(0, 470)
             for s in snake_segments:
@@ -2882,7 +3047,7 @@ def hardobstaclegame():
         if len(AIDirection2)>2:
             AIDirection2.pop(0) #keep track of AI2 direction
     
-        #avoid obstacles -- SNAKE NOT MOVING? -- GET AI2 SNAKE MOVING
+        #avoid obstacles
         for b in badsnake_segments:
             #one
             if b.rect.x>=50 and b.rect.x<=90 and b.rect.y+20>=82 and b.rect.y+20<=102:
@@ -3482,17 +3647,31 @@ def hardobstaclegame():
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                scoreobj=textbasics.render('Click to Play Again', True, RED)
-                scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
-                scorerect.centery=DISPLAYSURF.get_rect().centery+90
-                DISPLAYSURF.blit(scoreobj, scorerect)
+                againobj=textbasics.render('Click to Play Again', True, RED)
+                againrect=againobj.get_rect()
+                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centery=DISPLAYSURF.get_rect().centery+90
+                DISPLAYSURF.blit(againobj, againrect)
+                #blit quit
+                quitobj=textbasics.render('QUIT', True, GREEN)
+                quitrect=quitobj.get_rect()
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centery=DISPLAYSURF.get_rect().centery+135
+                DISPLAYSURF.blit(quitobj, quitrect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
                     if event.type==MOUSEBUTTONDOWN:
-                        bgmusic.stop()
-                        start()
+                        #find position of mouse
+                        #if mouse says click again
+                        x,y=pygame.mouse.get_pos()
+                        if x>250 and x<550 and y>310 and y<355:
+                            bgmusic.stop()
+                            start()
+                        #if mouse says quit
+                        if x>355 and x<445 and y>365 and y<400:
+                            pygame.quit()
+                            sys.exit()
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -3548,4 +3727,4 @@ def hardobstaclegame():
         create-=1 #subtract from create to keep track of apple spawning
         all_sprites_list.remove(old_segment)
 
-hardobstaclegame()
+mediumgame()
