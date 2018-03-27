@@ -24,21 +24,10 @@
 ##by eating the red apples. The green apples makes you lose a point and
 ##speed increases. Levels increase based on the amount of points you have.
 
-#LEVELS ---
-#if 0-5 and 5-10, try to get another five apples -- level 1 and 2 -- DONE
-#if 10-15 and 15-20, add bad apples every time a good apple spawns -- level 3 and 4 -- DONE
-#if 20-25 and 25-30, add AI snake try to get apples and player -- level 5 and 6 -- DONE
-#if 30-35 and 35-40, add obstacles (think about what boosts to add) -- level 7 and 8 -- DONE
-#if 40-45 and 45-50, add another AI snake -- level 9 and 10 -- DONE
-
 #BUGS ---
-#instructions -- DONE
-#work on quit ability (at game over and after each level) -- DONE
-#make apples spawn faster -- DONE
-#fix AI snake and obstacle collision -- DONE ISH
-#fix audio
-#blit goals for each level?
-#add boosts -- extra points?
+#fix AI snake collision with obstacles (left and right not working)
+#fix audio -- do at home?
+
 
 import pygame,sys
 from pygame.locals import *
@@ -134,13 +123,6 @@ class BadApple(Basic):
 
         self.image.fill(GREEN)
 
-#bad apple class, comes from snake class
-class BoostApple(Basic):
-    def __init__(self,x,y):
-        super(BoostApple, self).__init__(x,y)
-
-        self.image.fill(YELLOW)
-
 class Obstacle(Basic):
     def __init__(self,x,y):
         super(Obstacle, self).__init__(x,y)
@@ -207,7 +189,6 @@ def specialcollision(badsnake,snake,food,pics,sound):
                 #remove box on snake
                 badsnake=badsnake.pop() #remove end of snake from list and sprites list
                 pics.remove(badsnake)
-                #enemyscore-=1 #-1 from score
                 ticker+=0.5
 
 #checks for collision and adds points
@@ -242,7 +223,6 @@ def specialcollision2(badsnake,food,pics,sound):
                 #remove box on snake
                 badsnake=badsnake.pop() #remove end of snake from list and sprites list
                 pics.remove(badsnake)
-                #enemyscore-=1 #-1 from score
                 ticker+=0.5
 
 #create obstacles
@@ -406,11 +386,11 @@ def obstaclecollision(snake,music,route,a,b,obstlist):
 def check(badsnake,snake,route,pics,music,badroute,x,y,sm,w):
     dead=False #keeps track whether or not he's dead
     for s in snake: #if he goes past the borders set dead to true
-        if s.rect.x>=785:
+        if s.rect.x>=800:
             dead=True
         elif s.rect.x<=0:
             dead=True
-        if s.rect.y>=485:
+        if s.rect.y>=500:
             dead=True
         elif s.rect.y<=0:
             dead=True
@@ -461,6 +441,8 @@ def checkAI2(badsnake, snake,route,pics,music,badroute,x,y,sm,w):
 def gameover(gm):
     global score
     global level
+    gm.play(-1,0)
+    
     #when snake dies...
     listscore=[]
     #open scores file
@@ -649,18 +631,11 @@ def start(): #start screen
         quitrect.centery=DISPLAYSURF.get_rect().centery+135
         DISPLAYSURF.blit(quitobj, quitrect)
 
-##        #instructions, blit to start screen
-##        moveobj = text.render('Use WASD to move up and down', True, GREEN)
-##        moverect = moveobj.get_rect()
-##        moverect.centerx = DISPLAYSURF.get_rect().centerx
-##        moverect.centery = DISPLAYSURF.get_rect().centery+135
-##        DISPLAYSURF.blit(moveobj, moverect)
-
         for event in pygame.event.get():
             #if mousebuttondown or space pressed start game
             if event.type==MOUSEBUTTONDOWN:
                 x,y=pygame.mouse.get_pos()
-                #310,490
+                #310,490 - x and y positions
                 #230,265
                 if x>310 and x<490 and y>230 and y<265:
                     end_it=True
@@ -837,8 +812,6 @@ def easygame(): #level 1 and 2
 
         #for every 5 apples, go to next level
         if (score/level)==5:
-            #print(score/level)
-            #print('level one complete')
             end_it = False
             while (end_it == False):
                 #blit level on screen
@@ -969,7 +942,7 @@ def easygame(): #level 1 and 2
         titleobj = text.render(str(score), True, WHITE)
         titlerect = titleobj.get_rect()
         titlerect.x = 5
-        titlerect.y = 0
+        titlerect.y = 5
         DISPLAYSURF.blit(titleobj,titlerect)
         pygame.display.flip()
 
@@ -1051,8 +1024,6 @@ def mediumgame(): #level 3 and 4
 
         #for every 5 apples, go to next level
         if (score/level)==5:
-            #print(score/level)
-            #print('level one complete')
             end_it = False
             while (end_it == False):
                 #blit level on screen
@@ -1089,7 +1060,6 @@ def mediumgame(): #level 3 and 4
                         if x>250 and x<550 and y>310 and y<355:
                             end_it=True
                             level+=1
-                            #print(level)
                             if score>=20:
                                 bgmusic.stop()
                                 hardgame()
@@ -1201,7 +1171,7 @@ def mediumgame(): #level 3 and 4
         titleobj = text.render(str(score), True, WHITE)
         titlerect = titleobj.get_rect()
         titlerect.x = 5
-        titlerect.y = 0
+        titlerect.y = 5
         DISPLAYSURF.blit(titleobj,titlerect)
         pygame.display.flip()
 
@@ -1275,36 +1245,9 @@ def hardgame(): #level 5 and 6
         # add segment to sprites list and badsnake list
         badsnake_segments.append(segment)
         all_sprites_list.add(segment)
-    #starter snake - AI2
-##    badsnake_segments2 = []
-##    for i in range(3):
-##        f = (f_change + margin) * i + 5
-##        g = 465
-##        segment = AISnake(f, g)
-##        # add segment to sprites list and badsnake list
-##        badsnake_segments2.append(segment)
-##        #all_sprites_list.add(segment)
-
-##    #spawn special apple - AI snake freezes for 5sec
-##    applex=random.randint(0,770)
-##    appley=random.randint(0,470)
-##    for s in snake_segments:
-##        if applex==s.rect.x:
-##            applex+=15
-##        if appley==s.rect.y:
-##            appley+=15
-##    for s in badsnake_segments:
-##        if applex==s.rect.x:
-##            applex+=15
-##        if appley==s.rect.y:
-##            appley+=15            
-##    apple=BoostApple(applex,appley)
-##    Boost.append(apple)
-##    all_sprites_list.add(apple)
 
     while True:
         check(badsnake_segments,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin)  # check lives
-        #checkAI2(badsnake_segments2,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin) #check lives with AI2
         collision(badsnake_segments,snake_segments, Apples,all_sprites_list,bite) #check for collisions with apple
         specialcollision(badsnake_segments,snake_segments, BadApples,all_sprites_list,bite) #check for collision with special apple
 
@@ -1767,7 +1710,7 @@ def hardgame(): #level 5 and 6
         titleobj = text.render(str(score), True, WHITE)
         titlerect = titleobj.get_rect()
         titlerect.x = 5
-        titlerect.y = 0
+        titlerect.y = 5
         DISPLAYSURF.blit(titleobj,titlerect)
         pygame.display.flip()
 
@@ -1811,9 +1754,6 @@ def obstaclegame(): #level 7 and 8
 
     a_change = snakewidth + margin
     b_change = 0
-
-    f_change=snakewidth+margin
-    g_change=0
     
     clock=pygame.time.Clock()
 
@@ -1843,32 +1783,6 @@ def obstaclegame(): #level 7 and 8
         # add segment to sprites list and badsnake list
         badsnake_segments.append(segment)
         all_sprites_list.add(segment)
-    #starter snake - AI2
-##    badsnake_segments2 = []
-##    for i in range(3):
-##        f = (f_change + margin) * i + 5
-##        g = 465
-##        segment = AISnake(f, g)
-##        # add segment to sprites list and badsnake list
-##        badsnake_segments2.append(segment)
-##        #all_sprites_list.add(segment)
-
-##    #spawn special apple - freezes AI snake for 5sec
-##    applex=random.randint(0,770)
-##    appley=random.randint(0,470)
-##    for s in snake_segments:
-##        if applex==s.rect.x:
-##            applex+=15
-##        if appley==s.rect.y:
-##            appley+=15
-##    for s in badsnake_segments:
-##        if applex==s.rect.x:
-##            applex+=15
-##        if appley==s.rect.y:
-##            appley+=15            
-##    apple=BoostApple(applex,appley)
-##    Boost.append(apple)
-##    all_sprites_list.add(apple)
 
     while True:
         obstacles(Obst,all_sprites_list) #create obstacles
@@ -1988,46 +1902,45 @@ def obstaclegame(): #level 7 and 8
             badsnake_segments.insert(0, badsegment)
             all_sprites_list.add(badsegment)
 
-##        if create<=0: #if create is less than 0 create new apples
-##            applex=random.randint(0,770)
-##            appley=random.randint(0,470)
-##            for s in snake_segments:
-##                if applex==s.rect.x:
-##                    applex+=15
-##                if appley==s.rect.y:
-##                    appley+=15
-##            for s in badsnake_segments:
-##                if applex==s.rect.x:
-##                    applex+=15
-##                if appley==s.rect.y:
-##                    appley+=15
-##            apple=Apple(applex,appley)
-##            Apples.append(apple)
-##            all_sprites_list.add(apple)
-##            create=30
-##
-##        if create==15: #when create is 25, add special reduction apple
-##            applex = random.randint(0, 770)
-##            appley = random.randint(0, 470)
-##            for s in snake_segments:
-##                if applex==s.rect.x:
-##                    applex+=30
-##                if appley==s.rect.y:
-##                    appley+=30
-##            for s in badsnake_segments:
-##                if applex==s.rect.x:
-##                    applex+=30
-##                if appley==s.rect.y:
-##                    appley+=30
-##            for i in Obst:
-##                if applex>=i.rect.x and applex<=i.rect.x+30:
-##                    applex+=30
-##                if appley>=i.rect.y and applex<=i.rect.y:
-##                    appley+=30
-##            apple=BadApple(applex,appley)
-##            BadApples.append(apple)
-##            all_sprites_list.add(apple)        
+        if create<=0: #if create is less than 0 create new apples
+            applex=random.randint(0,770)
+            appley=random.randint(0,470)
+            for s in snake_segments:
+                if applex==s.rect.x:
+                    applex+=15
+                if appley==s.rect.y:
+                    appley+=15
+            for s in badsnake_segments:
+                if applex==s.rect.x:
+                    applex+=15
+                if appley==s.rect.y:
+                    appley+=15
+            apple=Apple(applex,appley)
+            Apples.append(apple)
+            all_sprites_list.add(apple)
+            create=30
 
+        if create==15: #when create is 25, add special reduction apple
+            applex = random.randint(0, 770)
+            appley = random.randint(0, 470)
+            for s in snake_segments:
+                if applex==s.rect.x:
+                    applex+=30
+                if appley==s.rect.y:
+                    appley+=30
+            for s in badsnake_segments:
+                if applex==s.rect.x:
+                    applex+=30
+                if appley==s.rect.y:
+                    appley+=30
+            for i in Obst:
+                if applex>=i.rect.x and applex<=i.rect.x+30:
+                    applex+=30
+                if appley>=i.rect.y and applex<=i.rect.y:
+                    appley+=30
+            apple=BadApple(applex,appley)
+            BadApples.append(apple)
+            all_sprites_list.add(apple)        
 
         for i in Obst: #check for obstacle collision with apples
             for a in Apples:
@@ -2120,284 +2033,86 @@ def obstaclegame(): #level 7 and 8
         if len(AIDirection)>2:
             AIDirection.pop(0) #keep track of AI direction
 
-        #avoid obstacles -- AI SNAKE NOT MOVING?
+        #avoid obstacles
         for b in badsnake_segments:
             for i in Obst:
                 if b.rect.colliderect(i):
-                    if 'right' in AIDirection:
-                        if b.rect.x+20>=50 and b.rect.x+20<=90 and b.rect.y>=82 and b.rect.y<=122:
-                            b.rect.x=32
-                        if b.rect.x+20>=155 and b.rect.x+20<=195 and b.rect.y>=253 and b.rect.y<=293:
-                            b.rect.x=137
-                        if b.rect.x+20>=345 and b.rect.x+20<=385 and b.rect.y>=358 and b.rect.y<=398:
-                            b.rect.x=327
-                        if b.rect.x+20>=677 and b.rect.x+20<=717 and b.rect.y>=144 and b.rect.y<=184:
-                            b.rect.x=659
-                        if b.rect.x+20>=567 and b.rect.x+20<=607 and b.rect.y>=278 and b.rect.y<=308:
-                            b.rect.x=549
-                        if b.rect.x+20>=325 and b.rect.x+20<=365 and b.rect.y>=35 and b.rect.y<=55:
-                            b.rect.x=307
-                        print('down')
+                    if 'right' in AIDirection:#stopping but not moving
+                        if b.rect.x+20>=50 and b.rect.x+20<=90:
+                            b.rect.x=28
+                        if b.rect.x+20>=155 and b.rect.x+20<=195:
+                            b.rect.x=133
+                        if b.rect.x+20>=345 and b.rect.x+20<=385:
+                            b.rect.x=323
+                        if b.rect.x+20>=677 and b.rect.x+20<=717:
+                            b.rect.x=655
+                        if b.rect.x+20>=567 and b.rect.x+20<=607:
+                            b.rect.x=545
+                        if b.rect.x+20>=325 and b.rect.x+20<=365:
+                            b.rect.x=303
+                        #print('down')
                         direction = 'down'
                         AIDirection.append(direction)
                         a_change = 0
                         b_change = (snakeheight + margin)
                         break
-                    if 'left' in AIDirection:
-                        if b.rect.x>=50 and b.rect.x<=90 and b.rect.y>=82 and b.rect.y<=122:
+                    elif 'left' in AIDirection:#stopping but not moving
+                        if b.rect.x>=50 and b.rect.x<=90:
                             b.rect.x=92
-                        if b.rect.x>=155 and b.rect.x<=195 and b.rect.y>=253 and b.rect.y<=293:
+                        if b.rect.x>=155 and b.rect.x<=195:
                             b.rect.x=197
-                        if b.rect.x>=345 and b.rect.x<=385 and b.rect.y>=358 and b.rect.y<=398:
-                            b.rect.x=387
-                        if b.rect.x>=677 and b.rect.x<=717 and b.rect.y>=144 and b.rect.y<=184:
+                        if b.rect.x>=345 and b.rect.x<=385:
+                            b.rect.x=384
+                        if b.rect.x>=677 and b.rect.x<=717:
                             b.rect.x=719
-                        if b.rect.x>=567 and b.rect.x<=607 and b.rect.y>=278 and b.rect.y<=308:
-                            b.rect.x=609
-                        if b.rect.x>=325 and b.rect.x<=365 and b.rect.y>=35 and b.rect.y<=55:
+                        if b.rect.x>=567 and b.rect.x<=607:
+                            b.rect.x=629
+                        if b.rect.x>=325 and b.rect.x<=365:
                             b.rect.x=367
-                        print('down')
-                        direction = 'down'
+                        #print('down')
+                        direction = 'up'
                         AIDirection.append(direction)
                         a_change = 0
-                        b_change = (snakeheight + margin)
+                        b_change = (snakeheight + margin)*-1
                         break
-                    if 'up' in AIDirection:
-                        if b.rect.x>=50 and b.rect.x<=90 and b.rect.y>=82 and b.rect.y<=122:
+                    elif 'up' in AIDirection:#
+                        if b.rect.y>=102 and b.rect.y<=122:
                             b.rect.y=124
-                        if b.rect.x>=155 and b.rect.x<=195 and b.rect.y>=253 and b.rect.y<=293:
+                        if b.rect.y>=273 and b.rect.y<=293:
                             b.rect.y=295
-                        if b.rect.x>=345 and b.rect.x<=385 and b.rect.y>=358 and b.rect.y<=398:
+                        if b.rect.y>=378 and b.rect.y<=398:
                             b.rect.y=400
-                        if b.rect.x>=677 and b.rect.x<=717 and b.rect.y>=144 and b.rect.y<=184:
+                        if b.rect.y>=164 and b.rect.y<=184:
                             b.rect.y=186
-                        if b.rect.x>=567 and b.rect.x<=607 and b.rect.y>=278 and b.rect.y<=308:
+                        if b.rect.y>=298 and b.rect.y<=308:
                             b.rect.y=310
-                        if b.rect.x>=325 and b.rect.x<=365 and b.rect.y>=35 and b.rect.y<=55:
-                            b.rect.y=57
-                        print('right')
+                        if b.rect.y>=55 and b.rect.y<=75:
+                            b.rect.y=77
+                        #print('right')
+                        direction='left'
+                        AIDirection.append(direction)
+                        a_change=(snakewidth + margin)*-1
+                        b_change=0
+                        break
+                    elif 'down' in AIDirection:#
+                        if b.rect.y+20>=82 and b.rect.y+20<=102:
+                            b.rect.y=80
+                        if b.rect.y+20>=253 and b.rect.y+20<=273:
+                            b.rect.y=251
+                        if b.rect.y+20>=358 and b.rect.y+20<=378:
+                            b.rect.y=356
+                        if b.rect.y+20>=144 and b.rect.y+20<=164:
+                            b.rect.y=142
+                        if b.rect.y+20>=278 and b.rect.y+20<=298:
+                            b.rect.y=276
+                        if b.rect.y+20>=35 and b.rect.y+20<=55:
+                            b.rect.y=32
+                        #print('right')
                         direction='right'
                         AIDirection.append(direction)
                         a_change=(snakewidth + margin)
                         b_change=0
                         break
-                    if 'down' in AIDirection:
-                        if b.rect.x>=50 and b.rect.x<=90 and b.rect.y+20>=82 and b.rect.y+20<=122:
-                            b.rect.y=84
-                        if b.rect.x>=155 and b.rect.x<=195 and b.rect.y+20>=253 and b.rect.y+20<=293:
-                            b.rect.y=255
-                        if b.rect.x>=345 and b.rect.x<=385 and b.rect.y+20>=358 and b.rect.y+20<=398:
-                            b.rect.y=360
-                        if b.rect.x>=677 and b.rect.x<=717 and b.rect.y+20>=144 and b.rect.y+20<=184:
-                            b.rect.y=146
-                        if b.rect.x>=567 and b.rect.x<=607 and b.rect.y+20>=278 and b.rect.y+20<=308:
-                            b.rect.y=280
-                        if b.rect.x>=325 and b.rect.x<=365 and b.rect.y+20>=35 and b.rect.y+20<=55:
-                            b.rect.y=37
-                        print('right')
-                        direction='right'
-                        AIDirection.append(direction)
-                        a_change=(snakewidth + margin)
-                        b_change=0
-                        break
-##            #one
-##            if b.rect.x>=50 and b.rect.x<=90 and b.rect.y+20>=82 and b.rect.y+20<=102:
-##                print('right')
-##                b.rect.y=62
-##                direction='right'
-##                AIDirection.append(direction)
-##                a_change=(snakewidth + margin)
-##                b_change=0
-##                break
-##            if b.rect.x>=50 and b.rect.x<=90 and b.rect.y>=102 and b.rect.y<=122:
-##                print('right')
-##                b.rect.y=124
-##                direction='right'
-##                AIDirection.append(direction)
-##                a_change=(snakewidth + margin)
-##                b_change=0
-##                break
-##            if b.rect.y>=82 and b.rect.y<=122 and b.rect.x+20>=50 and b.rect.x+20<=70:
-##                print('down')
-##                b.rect.x=30
-##                direction = 'down'
-##                AIDirection.append(direction)
-##                a_change = 0
-##                b_change = (snakeheight + margin)
-##                break
-##            if b.rect.y>=82 and b.rect.y<=122 and b.rect.x>=70 and b.rect.x<=90:
-##                print('down')
-##                b.rect.x=92
-##                direction = 'down'
-##                AIDirection.append(direction)
-##                a_change = 0
-##                b_change = (snakeheight + margin)
-##                break
-##            #two
-##            if b.rect.x>=155 and b.rect.x<=195 and b.rect.y+20>=253 and b.rect.y+20<=273:
-##                print('right')
-##                b.rect.y=233
-##                direction='right'
-##                AIDirection.append(direction)
-##                a_change=(snakewidth + margin)
-##                b_change=0
-##                break
-##            if b.rect.x>=155 and b.rect.x<=195 and b.rect.y>=273 and b.rect.y<=293:
-##                print('right')
-##                b.rect.y=295
-##                direction='right'
-##                AIDirection.append(direction)
-##                a_change=(snakewidth + margin)
-##                b_change=0
-##                break
-##            if b.rect.y>=253 and b.rect.y<=293 and b.rect.x+20>=155 and b.rect.x+20<=175:
-##                print('down')
-##                b.rect.x=135
-##                direction = 'down'
-##                AIDirection.append(direction)
-##                a_change = 0
-##                b_change = (snakeheight + margin)
-##                break
-##            if b.rect.y>=253 and b.rect.y<=293 and b.rect.x>=175 and b.rect.x<=195:
-##                print('down')
-##                b.rect.x=177
-##                direction = 'down'
-##                AIDirection.append(direction)
-##                a_change = 0
-##                b_change = (snakeheight + margin)
-##                break
-##            #three
-##            if b.rect.x>=345 and b.rect.x<=385 and b.rect.y+20>=358 and b.rect.y+20<=378:
-##                print('right')
-##                b.rect.y=338
-##                direction='right'
-##                AIDirection.append(direction)
-##                a_change=(snakewidth + margin)
-##                b_change=0
-##                break
-##            if b.rect.x>=345 and b.rect.x<=385 and b.rect.y>=378 and b.rect.y<=398:
-##                print('right')
-##                b.rect.y=400
-##                direction='right'
-##                AIDirection.append(direction)
-##                a_change=(snakewidth + margin)
-##                b_change=0
-##                break
-##            if b.rect.y>=358 and b.rect.y<=398 and b.rect.x+20>=345 and b.rect.x+20<=365:
-##                print('up')
-##                b.rect.x=325
-##                direction = 'up'
-##                AIDirection.append(direction)
-##                a_change = 0
-##                b_change = (snakeheight + margin) * -1
-##                break
-##            if b.rect.y>=358 and b.rect.y<=398 and b.rect.x>=365 and b.rect.x<=385:
-##                print('up')
-##                b.rect.x=387
-##                direction = 'up'
-##                AIDirection.append(direction)
-##                a_change = 0
-##                b_change = (snakeheight + margin) * -1
-##                break
-##            #four
-##            if b.rect.x>=677 and b.rect.x<=717 and b.rect.y+20>=144 and b.rect.y+20<=164:
-##                print('left')
-##                b.rect.y=124
-##                direction = 'left'
-##                AIDirection.append(direction)
-##                a_change = (snakewidth + margin) * -1
-##                b_change = 0
-##                break 
-##            if b.rect.x>=677 and b.rect.x<=717 and b.rect.y>=164 and b.rect.y<=184:
-##                print('left')
-##                b.rect.y=186
-##                direction = 'left'
-##                AIDirection.append(direction)
-##                a_change = (snakewidth + margin) * -1
-##                b_change = 0
-##                break
-##            if b.rect.y>=144 and b.rect.y<=184 and b.rect.x+20>=677 and b.rect.x+20<=697:
-##                print('down')
-##                b.rect.x=657
-##                direction = 'down'
-##                AIDirection.append(direction)
-##                a_change = 0
-##                b_change = (snakeheight + margin)
-##                break
-##            if b.rect.y>=144 and b.rect.y<=184 and b.rect.x>=697 and b.rect.x<=717:
-##                print('down')
-##                b.rect.x=719
-##                direction = 'down'
-##                AIDirection.append(direction)
-##                a_change = 0
-##                b_change = (snakeheight + margin)
-##                break
-##            #five
-##            if b.rect.x>=567 and b.rect.x<=607 and b.rect.y+20>=278 and b.rect.y+20<=298:
-##                print('left')
-##                b.rect.y=258
-##                direction = 'left'
-##                AIDirection.append(direction)
-##                a_change = (snakewidth + margin) * -1
-##                b_change = 0
-##                break
-##            if b.rect.x>=567 and b.rect.x<=607 and b.rect.y>=298 and b.rect.y<=318:
-##                print('left')
-##                b.rect.y=320
-##                direction = 'left'
-##                AIDirection.append(direction)
-##                a_change = (snakewidth + margin) * -1
-##                b_change = 0
-##                break
-##            if b.rect.y>=278 and b.rect.y<=318 and b.rect.x+20>=567 and b.rect.x+20<=587:
-##                print('up')
-##                b.rect.x=547
-##                direction = 'up'
-##                AIDirection.append(direction)
-##                a_change = 0
-##                b_change = (snakeheight + margin) * -1
-##                break
-##            if b.rect.y>=278 and b.rect.y<=318 and b.rect.x>=587 and b.rect.x<=607:
-##                print('up')
-##                b.rect.x=609
-##                direction = 'up'
-##                AIDirection.append(direction)
-##                a_change = 0
-##                b_change = (snakeheight + margin) * -1
-##                break
-##            #six
-##            if b.rect.x>=325 and b.rect.x<=365 and b.rect.y+20>=35 and b.rect.y+20<=75:
-##                print('right')
-##                b.rect.y=15
-##                direction='right'
-##                AIDirection.append(direction)
-##                a_change=(snakewidth + margin)
-##                b_change=0
-##                break 
-##            if b.rect.x>=325 and b.rect.x<=365 and b.rect.y>=75 and b.rect.y<=95:
-##                print('right')
-##                b.rect.y=97
-##                direction='right'
-##                AIDirection.append(direction)
-##                a_change=(snakewidth + margin)
-##                b_change=0
-##                break 
-##            if b.rect.y>=35 and b.rect.y<=95 and b.rect.x+20>=325 and b.rect.x+20<=345:
-##                print('down')
-##                b.rect.x=305
-##                direction = 'down'
-##                AIDirection.append(direction)
-##                a_change = 0
-##                b_change = (snakeheight + margin)
-##                break  
-##            if b.rect.y>=35 and b.rect.y<=95 and b.rect.x>=345 and b.rect.x<=365:
-##                print('down')
-##                b.rect.x=3675
-##                direction = 'down'
-##                AIDirection.append(direction)
-##                a_change = 0
-##                b_change = (snakeheight + margin)
-##                break
 
         if len(AIDirection)>2:
             AIDirection.pop(0) #keep track of AI direction
@@ -2437,28 +2152,24 @@ def obstaclegame(): #level 7 and 8
             for s in badsnake_segments: #follow the apple up or down
                 for a in Apples:   
                     if (s.rect.x < a.rect.x and s.rect.y > a.rect.y):
-                        #print('up')
                         direction = 'up'
                         AIDirection.append(direction)
                         a_change = 0
                         b_change = (snakeheight + margin) * -1
                         break
                     if (s.rect.x < a.rect.x and s.rect.y < a.rect.y):
-                        #print('down')
                         direction = 'down'
                         AIDirection.append(direction)
                         a_change = 0
                         b_change = (snakeheight + margin)
                         break
                     if (s.rect.x > a.rect.x and s.rect.y > a.rect.y):
-                        #print('up')
                         direction = 'up'
                         AIDirection.append(direction)
                         a_change = 0
                         b_change = (snakeheight + margin) * -1
                         break
                     if (s.rect.x > a.rect.x and s.rect.y < a.rect.y):
-                        #print('down')
                         direction = 'down'
                         AIDirection.append(direction)
                         a_change = 0
@@ -2471,14 +2182,12 @@ def obstaclegame(): #level 7 and 8
             for s in badsnake_segments: #if the apple and the snake are at the same position - ish, go to apple
                 for a in Apples:
                     if (s.rect.y < (a.rect.y + 5)) and (s.rect.y > (a.rect.y - 5)) and ((s.rect.x < a.rect.x)):
-                        #print('right')
                         direction = 'right'
                         AIDirection.append(direction)
                         a_change = (snakewidth + margin)
                         b_change = 0
                         break
                     if (s.rect.y < (a.rect.y + 5)) and (s.rect.y > (a.rect.y - 5)) and ((s.rect.x > a.rect.x)):
-                        #print('left')
                         direction = 'left'
                         AIDirection.append(direction)
                         a_change = (snakewidth + margin) * -1
@@ -2492,31 +2201,24 @@ def obstaclegame(): #level 7 and 8
             for b in badsnake_segments: #follow the snake up or down
                 for s in snake_segments:
                     if (b.rect.x < s.rect.x and b.rect.y > s.rect.y):
-                        #print('up')
                         direction = 'up'
                         AIDirection.append(direction)
                         a_change = 0
                         b_change = (snakeheight + margin) * -1
                         break
-
                     if (b.rect.x < s.rect.x and b.rect.y < s.rect.y):
-                        #print('down')
                         direction = 'down'
                         AIDirection.append(direction)
                         a_change = 0
                         b_change = (snakeheight + margin)
                         break
-
                     if (b.rect.x > s.rect.x and b.rect.y > s.rect.y):
-                        #print('up')
                         direction = 'up'
                         AIDirection.append(direction)
                         a_change = 0
                         b_change = (snakeheight + margin) * -1
                         break
-                    
                     if (b.rect.x > s.rect.x and b.rect.y < s.rect.y):
-                        #print('down')
                         direction = 'down'
                         AIDirection.append(direction)
                         a_change = 0
@@ -2529,14 +2231,12 @@ def obstaclegame(): #level 7 and 8
             for b in badsnake_segments: #if the AI snake and the snake are at the same position - ish, go to snake
                 for s in snake_segments:
                     if (b.rect.y <= (s.rect.y + 20)) and (b.rect.y >= (s.rect.y - 20)) and ((b.rect.x <= s.rect.x)):
-                        #print('right')
                         direction = 'right'
                         AIDirection.append(direction)
                         a_change = (snakewidth + margin)
                         b_change = 0
                         break
                     if (b.rect.y <= (s.rect.y + 20)) and (b.rect.y >= (s.rect.y - 20)) and ((b.rect.x >= s.rect.x)):
-                        #print('left')
                         direction = 'left'
                         AIDirection.append(direction)
                         a_change = (snakewidth + margin) * -1
@@ -2655,7 +2355,7 @@ def obstaclegame(): #level 7 and 8
         titleobj = text.render(str(score), True, WHITE)
         titlerect = titleobj.get_rect()
         titlerect.x = 5
-        titlerect.y = 0
+        titlerect.y = 5
         DISPLAYSURF.blit(titleobj,titlerect)        
         
         pygame.display.flip()
@@ -2742,23 +2442,6 @@ def hardobstaclegame(): #level 9 and 10
         badsnake_segments2.append(segment)
         all_sprites_list.add(segment)
 
-##    #spawn special apple - freezes both AI snakes for 5sec
-##    applex=random.randint(0,770)
-##    appley=random.randint(0,470)
-##    for s in snake_segments:
-##        if applex==s.rect.x:
-##            applex+=15
-##        if appley==s.rect.y:
-##            appley+=15
-##    for s in badsnake_segments:
-##        if applex==s.rect.x:
-##            applex+=15
-##        if appley==s.rect.y:
-##            appley+=15            
-##    apple=BoostApple(applex,appley)
-##    Boost.append(apple)
-##    all_sprites_list.add(apple)
-
     while True:
         obstacles(Obst,all_sprites_list)
         check(badsnake_segments,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin)  # check lives
@@ -2771,8 +2454,6 @@ def hardobstaclegame(): #level 9 and 10
 
         #for every 5 apples, go to next level
         if (score/level)==5:
-            #print(score/level)
-            #print('level one complete')
             end_it = False
             while (end_it == False):
                 #blit level on screen
@@ -2809,7 +2490,6 @@ def hardobstaclegame(): #level 9 and 10
                         if x>250 and x<550 and y>310 and y<355:
                             end_it=True
                             level+=1
-                            #print(level)
                             if score>=50:
                                 winobj=textbasics.render('You Win!', True, RED)
                                 winrect=winobj.get_rect()
@@ -2991,7 +2671,6 @@ def hardobstaclegame(): #level 9 and 10
         #if AI goes past the borders, reset
         for s in badsnake_segments:
             if s.rect.x > 800 and s.rect.y > 250:
-                #print('up')
                 s.rect.x = 780
                 direction = 'up'
                 AIDirection.append(direction)
@@ -2999,7 +2678,6 @@ def hardobstaclegame(): #level 9 and 10
                 b_change = (snakeheight + margin) * -1
                 break
             if s.rect.x > 800 and s.rect.y < 250:
-                #print('down')
                 s.rect.x = 780
                 direction = 'down'
                 AIDirection.append(direction)
@@ -3007,7 +2685,6 @@ def hardobstaclegame(): #level 9 and 10
                 b_change = (snakeheight + margin)
                 break
             if s.rect.x < 0 and s.rect.y > 250:
-                #print('up')
                 s.rect.x = 0
                 direction = 'up'
                 AIDirection.append(direction)
@@ -3015,7 +2692,6 @@ def hardobstaclegame(): #level 9 and 10
                 b_change = (snakeheight + margin) * -1
                 break
             if s.rect.x < 0 and s.rect.y < 250:
-                #print('down')
                 s.rect.x = 0
                 direction = 'down'
                 AIDirection.append(direction)
@@ -3028,7 +2704,6 @@ def hardobstaclegame(): #level 9 and 10
                 
         for s in badsnake_segments: #AI borders
             if s.rect.y > 500 and s.rect.x < 400:
-                #print('right')
                 s.rect.y = 480
                 direction = 'right'
                 AIDirection.append(direction)
@@ -3036,7 +2711,6 @@ def hardobstaclegame(): #level 9 and 10
                 b_change = 0
                 break
             if s.rect.y > 500 and s.rect.x > 400:
-                #print('left')
                 s.rect.y = 480
                 direction = 'left'
                 AIDirection.append(direction)
@@ -3044,7 +2718,6 @@ def hardobstaclegame(): #level 9 and 10
                 b_change = 0
                 break
             if s.rect.y < 0 and s.rect.x < 400:
-                #print('right')
                 s.rect.y = 0
                 direction = 'right'
                 AIDirection.append(direction)
@@ -3052,7 +2725,6 @@ def hardobstaclegame(): #level 9 and 10
                 b_change = 0
                 break
             if s.rect.y < 0 and s.rect.x > 400:
-                #print('left')
                 s.rect.y = 0
                 direction = 'left'
                 AIDirection.append(direction)
@@ -3066,7 +2738,6 @@ def hardobstaclegame(): #level 9 and 10
         #if AI2 goes past the borders, reset
         for s in badsnake_segments2:
             if s.rect.x > 800 and s.rect.y > 250:
-                #print('up')
                 s.rect.x = 780
                 direction = 'up'
                 AIDirection2.append(direction)
@@ -3074,7 +2745,6 @@ def hardobstaclegame(): #level 9 and 10
                 g_change = (snakeheight + margin) * -1
                 break
             if s.rect.x > 800 and s.rect.y < 250:
-                #print('down')
                 s.rect.x = 780
                 direction = 'down'
                 AIDirection2.append(direction)
@@ -3082,7 +2752,6 @@ def hardobstaclegame(): #level 9 and 10
                 g_change = (snakeheight + margin)
                 break
             if s.rect.x < 0 and s.rect.y > 250:
-                #print('up')
                 s.rect.x = 0
                 direction = 'up'
                 AIDirection2.append(direction)
@@ -3090,7 +2759,6 @@ def hardobstaclegame(): #level 9 and 10
                 g_change = (snakeheight + margin) * -1
                 break
             if s.rect.x < 0 and s.rect.y < 250:
-                #print('down')
                 s.rect.x = 0
                 direction = 'down'
                 AIDirection2.append(direction)
@@ -3103,7 +2771,6 @@ def hardobstaclegame(): #level 9 and 10
                 
         for s in badsnake_segments2: #AI2 borders
             if s.rect.y > 500 and s.rect.x < 400:
-                #print('right')
                 s.rect.y = 480
                 direction = 'right'
                 AIDirection2.append(direction)
@@ -3111,7 +2778,6 @@ def hardobstaclegame(): #level 9 and 10
                 g_change = 0
                 break
             if s.rect.y > 500 and s.rect.x > 400:
-                #print('left')
                 s.rect.y = 480
                 direction = 'left'
                 AIDirection2.append(direction)
@@ -3119,7 +2785,6 @@ def hardobstaclegame(): #level 9 and 10
                 g_change = 0
                 break
             if s.rect.y < 0 and s.rect.x < 400:
-                #print('right')
                 s.rect.y = 0
                 direction = 'right'
                 AIDirection2.append(direction)
@@ -3127,7 +2792,6 @@ def hardobstaclegame(): #level 9 and 10
                 g_change = 0
                 break
             if s.rect.y < 0 and s.rect.x > 400:
-                #print('left')
                 s.rect.y = 0
                 direction = 'left'
                 AIDirection2.append(direction)
@@ -3142,77 +2806,77 @@ def hardobstaclegame(): #level 9 and 10
         for b in badsnake_segments:
             for i in Obst:
                 if b.rect.colliderect(i):
-                    if 'right' in AIDirection:
-                        if b.rect.x+20>=50 and b.rect.x+20<=90 and b.rect.y>=82 and b.rect.y<=122:
-                            b.rect.x=32
-                        if b.rect.x+20>=155 and b.rect.x+20<=195 and b.rect.y>=253 and b.rect.y<=293:
-                            b.rect.x=137
-                        if b.rect.x+20>=345 and b.rect.x+20<=385 and b.rect.y>=358 and b.rect.y<=398:
-                            b.rect.x=327
-                        if b.rect.x+20>=677 and b.rect.x+20<=717 and b.rect.y>=144 and b.rect.y<=184:
-                            b.rect.x=659
-                        if b.rect.x+20>=567 and b.rect.x+20<=607 and b.rect.y>=278 and b.rect.y<=308:
-                            b.rect.x=549
-                        if b.rect.x+20>=325 and b.rect.x+20<=365 and b.rect.y>=35 and b.rect.y<=55:
-                            b.rect.x=307
-                        print('down')
+                    if 'right' in AIDirection:#stopping but not moving
+                        if b.rect.x+20>=50 and b.rect.x+20<=90:
+                            b.rect.x=28
+                        if b.rect.x+20>=155 and b.rect.x+20<=195:
+                            b.rect.x=133
+                        if b.rect.x+20>=345 and b.rect.x+20<=385:
+                            b.rect.x=323
+                        if b.rect.x+20>=677 and b.rect.x+20<=717:
+                            b.rect.x=655
+                        if b.rect.x+20>=567 and b.rect.x+20<=607:
+                            b.rect.x=545
+                        if b.rect.x+20>=325 and b.rect.x+20<=365:
+                            b.rect.x=303
+                        #print('down')
                         direction = 'down'
                         AIDirection.append(direction)
                         a_change = 0
                         b_change = (snakeheight + margin)
                         break
-                    if 'left' in AIDirection:
-                        if b.rect.x>=50 and b.rect.x<=90 and b.rect.y>=82 and b.rect.y<=122:
+                    elif 'left' in AIDirection:#stopping but not moving
+                        if b.rect.x>=50 and b.rect.x<=90:
                             b.rect.x=92
-                        if b.rect.x>=155 and b.rect.x<=195 and b.rect.y>=253 and b.rect.y<=293:
+                        if b.rect.x>=155 and b.rect.x<=195:
                             b.rect.x=197
-                        if b.rect.x>=345 and b.rect.x<=385 and b.rect.y>=358 and b.rect.y<=398:
-                            b.rect.x=387
-                        if b.rect.x>=677 and b.rect.x<=717 and b.rect.y>=144 and b.rect.y<=184:
+                        if b.rect.x>=345 and b.rect.x<=385:
+                            b.rect.x=384
+                        if b.rect.x>=677 and b.rect.x<=717:
                             b.rect.x=719
-                        if b.rect.x>=567 and b.rect.x<=607 and b.rect.y>=278 and b.rect.y<=308:
-                            b.rect.x=609
-                        if b.rect.x>=325 and b.rect.x<=365 and b.rect.y>=35 and b.rect.y<=55:
+                        if b.rect.x>=567 and b.rect.x<=607:
+                            b.rect.x=629
+                        if b.rect.x>=325 and b.rect.x<=365:
                             b.rect.x=367
-                        print('down')
-                        direction = 'down'
+                        #print('down')
+                        direction = 'up'
                         AIDirection.append(direction)
                         a_change = 0
-                        b_change = (snakeheight + margin)
+                        b_change = (snakeheight + margin)*-1
                         break
-                    if 'up' in AIDirection:
-                        if b.rect.x>=50 and b.rect.x<=90 and b.rect.y>=82 and b.rect.y<=122:
+                    elif 'up' in AIDirection:#
+                        if b.rect.y>=102 and b.rect.y<=122:
                             b.rect.y=124
-                        if b.rect.x>=155 and b.rect.x<=195 and b.rect.y>=253 and b.rect.y<=293:
+                        if b.rect.y>=273 and b.rect.y<=293:
                             b.rect.y=295
-                        if b.rect.x>=345 and b.rect.x<=385 and b.rect.y>=358 and b.rect.y<=398:
+                        if b.rect.y>=378 and b.rect.y<=398:
                             b.rect.y=400
-                        if b.rect.x>=677 and b.rect.x<=717 and b.rect.y>=144 and b.rect.y<=184:
+                        if b.rect.y>=164 and b.rect.y<=184:
                             b.rect.y=186
-                        if b.rect.x>=567 and b.rect.x<=607 and b.rect.y>=278 and b.rect.y<=308:
+                        if b.rect.y>=298 and b.rect.y<=308:
                             b.rect.y=310
-                        if b.rect.x>=325 and b.rect.x<=365 and b.rect.y>=35 and b.rect.y<=55:
-                            b.rect.y=57
-                        print('right')
-                        direction='right'
+                        if b.rect.y>=55 and b.rect.y<=75:
+                            b.rect.y=77
+                        #print('right')
+                        direction='left'
                         AIDirection.append(direction)
-                        a_change=(snakewidth + margin)
+                        a_change=(snakewidth + margin)*-1
                         b_change=0
                         break
-                    if 'down' in AIDirection:
-                        if b.rect.x>=50 and b.rect.x<=90 and b.rect.y+20>=82 and b.rect.y+20<=122:
-                            b.rect.y=84
-                        if b.rect.x>=155 and b.rect.x<=195 and b.rect.y+20>=253 and b.rect.y+20<=293:
-                            b.rect.y=255
-                        if b.rect.x>=345 and b.rect.x<=385 and b.rect.y+20>=358 and b.rect.y+20<=398:
-                            b.rect.y=360
-                        if b.rect.x>=677 and b.rect.x<=717 and b.rect.y+20>=144 and b.rect.y+20<=184:
-                            b.rect.y=146
-                        if b.rect.x>=567 and b.rect.x<=607 and b.rect.y+20>=278 and b.rect.y+20<=308:
-                            b.rect.y=280
-                        if b.rect.x>=325 and b.rect.x<=365 and b.rect.y+20>=35 and b.rect.y+20<=55:
-                            b.rect.y=37
-                        print('right')
+                    elif 'down' in AIDirection:#
+                        if b.rect.y+20>=82 and b.rect.y+20<=102:
+                            b.rect.y=80
+                        if b.rect.y+20>=253 and b.rect.y+20<=273:
+                            b.rect.y=251
+                        if b.rect.y+20>=358 and b.rect.y+20<=378:
+                            b.rect.y=356
+                        if b.rect.y+20>=144 and b.rect.y+20<=164:
+                            b.rect.y=142
+                        if b.rect.y+20>=278 and b.rect.y+20<=298:
+                            b.rect.y=276
+                        if b.rect.y+20>=35 and b.rect.y+20<=55:
+                            b.rect.y=32
+                        #print('right')
                         direction='right'
                         AIDirection.append(direction)
                         a_change=(snakewidth + margin)
@@ -3222,80 +2886,81 @@ def hardobstaclegame(): #level 9 and 10
         if len(AIDirection)>2:
             AIDirection.pop(0) #keep track of AI direction
 
+        #second snake avoid obstacles
         for b in badsnake_segments2:
             for i in Obst:
                 if b.rect.colliderect(i):
-                    if 'right' in AIDirection2:
-                        if b.rect.x+20>=50 and b.rect.x+20<=90 and b.rect.y>=82 and b.rect.y<=122:
-                            b.rect.x=32
-                        if b.rect.x+20>=155 and b.rect.x+20<=195 and b.rect.y>=253 and b.rect.y<=293:
-                            b.rect.x=137
-                        if b.rect.x+20>=345 and b.rect.x+20<=385 and b.rect.y>=358 and b.rect.y<=398:
-                            b.rect.x=327
-                        if b.rect.x+20>=677 and b.rect.x+20<=717 and b.rect.y>=144 and b.rect.y<=184:
-                            b.rect.x=659
-                        if b.rect.x+20>=567 and b.rect.x+20<=607 and b.rect.y>=278 and b.rect.y<=308:
-                            b.rect.x=549
-                        if b.rect.x+20>=325 and b.rect.x+20<=365 and b.rect.y>=35 and b.rect.y<=55:
-                            b.rect.x=307
-                        print('down')
+                    if 'right' in AIDirection2:#stopping but not moving
+                        if b.rect.x+20>=50 and b.rect.x+20<=90:
+                            b.rect.x=28
+                        if b.rect.x+20>=155 and b.rect.x+20<=195:
+                            b.rect.x=133
+                        if b.rect.x+20>=345 and b.rect.x+20<=385:
+                            b.rect.x=323
+                        if b.rect.x+20>=677 and b.rect.x+20<=717:
+                            b.rect.x=655
+                        if b.rect.x+20>=567 and b.rect.x+20<=607:
+                            b.rect.x=545
+                        if b.rect.x+20>=325 and b.rect.x+20<=365:
+                            b.rect.x=303
+                        #print('down')
                         direction = 'down'
                         AIDirection2.append(direction)
                         a_change = 0
                         b_change = (snakeheight + margin)
                         break
-                    if 'left' in AIDirection2:
-                        if b.rect.x>=50 and b.rect.x<=90 and b.rect.y>=82 and b.rect.y<=122:
+                    elif 'left' in AIDirection2:#stopping but not moving
+                        if b.rect.x>=50 and b.rect.x<=90:
                             b.rect.x=92
-                        if b.rect.x>=155 and b.rect.x<=195 and b.rect.y>=253 and b.rect.y<=293:
+                        if b.rect.x>=155 and b.rect.x<=195:
                             b.rect.x=197
-                        if b.rect.x>=345 and b.rect.x<=385 and b.rect.y>=358 and b.rect.y<=398:
-                            b.rect.x=387
-                        if b.rect.x>=677 and b.rect.x<=717 and b.rect.y>=144 and b.rect.y<=184:
+                        if b.rect.x>=345 and b.rect.x<=385:
+                            b.rect.x=384
+                        if b.rect.x>=677 and b.rect.x<=717:
                             b.rect.x=719
-                        if b.rect.x>=567 and b.rect.x<=607 and b.rect.y>=278 and b.rect.y<=308:
-                            b.rect.x=609
-                        if b.rect.x>=325 and b.rect.x<=365 and b.rect.y>=35 and b.rect.y<=55:
+                        if b.rect.x>=567 and b.rect.x<=607:
+                            b.rect.x=629
+                        if b.rect.x>=325 and b.rect.x<=365:
                             b.rect.x=367
-                        print('down')
-                        direction = 'down'
+                        #print('down')
+                        direction = 'up'
                         AIDirection2.append(direction)
                         a_change = 0
-                        b_change = (snakeheight + margin)
+                        b_change = (snakeheight + margin)*-1
                         break
-                    if 'up' in AIDirection2:
-                        if b.rect.x>=50 and b.rect.x<=90 and b.rect.y>=82 and b.rect.y<=122:
+                    elif 'up' in AIDirection2:#
+                        if b.rect.y>=102 and b.rect.y<=122:
                             b.rect.y=124
-                        if b.rect.x>=155 and b.rect.x<=195 and b.rect.y>=253 and b.rect.y<=293:
+                        if b.rect.y>=273 and b.rect.y<=293:
                             b.rect.y=295
-                        if b.rect.x>=345 and b.rect.x<=385 and b.rect.y>=358 and b.rect.y<=398:
+                        if b.rect.y>=378 and b.rect.y<=398:
                             b.rect.y=400
-                        if b.rect.x>=677 and b.rect.x<=717 and b.rect.y>=144 and b.rect.y<=184:
+                        if b.rect.y>=164 and b.rect.y<=184:
                             b.rect.y=186
-                        if b.rect.x>=567 and b.rect.x<=607 and b.rect.y>=278 and b.rect.y<=308:
+                        if b.rect.y>=298 and b.rect.y<=308:
                             b.rect.y=310
-                        if b.rect.x>=325 and b.rect.x<=365 and b.rect.y>=35 and b.rect.y<=55:
-                            b.rect.y=57
-                        print('right')
-                        direction='right'
+                        if b.rect.y>=55 and b.rect.y<=75:
+                            b.rect.y=77
+                        #print('right')
+                        direction='left'
                         AIDirection2.append(direction)
-                        a_change=(snakewidth + margin)
+                        a_change=(snakewidth + margin)*-1
                         b_change=0
                         break
-                    if 'down' in AIDirection2:
-                        if b.rect.x>=50 and b.rect.x<=90 and b.rect.y+20>=82 and b.rect.y+20<=122:
-                            b.rect.y=84
-                        if b.rect.x>=155 and b.rect.x<=195 and b.rect.y+20>=253 and b.rect.y+20<=293:
-                            b.rect.y=255
-                        if b.rect.x>=345 and b.rect.x<=385 and b.rect.y+20>=358 and b.rect.y+20<=398:
-                            b.rect.y=360
-                        if b.rect.x>=677 and b.rect.x<=717 and b.rect.y+20>=144 and b.rect.y+20<=184:
-                            b.rect.y=146
-                        if b.rect.x>=567 and b.rect.x<=607 and b.rect.y+20>=278 and b.rect.y+20<=308:
-                            b.rect.y=280
-                        if b.rect.x>=325 and b.rect.x<=365 and b.rect.y+20>=35 and b.rect.y+20<=55:
-                            b.rect.y=37
-                        print('right')
+                    elif 'down' in AIDirection2:#
+                        if b.rect.y+20>=82 and b.rect.y+20<=102:
+                            b.rect.y=80
+                        if b.rect.y+20>=253 and b.rect.y+20<=273:
+                            b.rect.y=251
+                        if b.rect.y+20>=358 and b.rect.y+20<=378:
+                            b.rect.y=356
+                        if b.rect.y+20>=144 and b.rect.y+20<=164:
+                            b.rect.y=142
+                        if b.rect.y+20>=278 and b.rect.y+20<=298:
+                            b.rect.y=276
+                        if b.rect.y+20>=35 and b.rect.y+20<=55:
+                            b.rect.y=32
+                        #print('right')
                         direction='right'
                         AIDirection2.append(direction)
                         a_change=(snakewidth + margin)
@@ -3340,28 +3005,24 @@ def hardobstaclegame(): #level 9 and 10
             for s in badsnake_segments: #follow the apple up or down
                 for a in Apples:   
                     if (s.rect.x < a.rect.x and s.rect.y > a.rect.y):
-                        #print('up')
                         direction = 'up'
                         AIDirection.append(direction)
                         a_change = 0
                         b_change = (snakeheight + margin) * -1
                         break
                     if (s.rect.x < a.rect.x and s.rect.y < a.rect.y):
-                        #print('down')
                         direction = 'down'
                         AIDirection.append(direction)
                         a_change = 0
                         b_change = (snakeheight + margin)
                         break
                     if (s.rect.x > a.rect.x and s.rect.y > a.rect.y):
-                        #print('up')
                         direction = 'up'
                         AIDirection.append(direction)
                         a_change = 0
                         b_change = (snakeheight + margin) * -1
                         break
                     if (s.rect.x > a.rect.x and s.rect.y < a.rect.y):
-                        #print('down')
                         direction = 'down'
                         AIDirection.append(direction)
                         a_change = 0
@@ -3374,14 +3035,12 @@ def hardobstaclegame(): #level 9 and 10
             for s in badsnake_segments: #if the apple and the snake are at the same position - ish, go to apple
                 for a in Apples:
                     if (s.rect.y < (a.rect.y + 5)) and (s.rect.y > (a.rect.y - 5)) and ((s.rect.x < a.rect.x)):
-                        #print('right')
                         direction = 'right'
                         AIDirection.append(direction)
                         a_change = (snakewidth + margin)
                         b_change = 0
                         break
                     if (s.rect.y < (a.rect.y + 5)) and (s.rect.y > (a.rect.y - 5)) and ((s.rect.x > a.rect.x)):
-                        #print('left')
                         direction = 'left'
                         AIDirection.append(direction)
                         a_change = (snakewidth + margin) * -1
@@ -3394,31 +3053,24 @@ def hardobstaclegame(): #level 9 and 10
         for b in badsnake_segments2: #follow the snake up or down
             for s in snake_segments:
                 if (b.rect.x < s.rect.x and b.rect.y > s.rect.y):
-                    #print('up')
                     direction = 'up'
                     AIDirection2.append(direction)
                     f_change = 0
                     g_change = (snakeheight + margin) * -1
                     break
-
                 if (b.rect.x < s.rect.x and b.rect.y < s.rect.y):
-                    #print('down')
                     direction = 'down'
                     AIDirection2.append(direction)
                     f_change = 0
                     g_change = (snakeheight + margin)
                     break
-
                 if (b.rect.x > s.rect.x and b.rect.y > s.rect.y):
-                    #print('up')
                     direction = 'up'
                     AIDirection2.append(direction)
                     f_change = 0
                     g_change = (snakeheight + margin) * -1
                     break
-                
                 if (b.rect.x > s.rect.x and b.rect.y < s.rect.y):
-                    #print('down')
                     direction = 'down'
                     AIDirection2.append(direction)
                     f_change = 0
@@ -3431,14 +3083,12 @@ def hardobstaclegame(): #level 9 and 10
         for b in badsnake_segments2: #if the AI snake and the snake are at the same position - ish, go to snake
             for s in snake_segments:
                 if (b.rect.y <= (s.rect.y + 20)) and (b.rect.y >= (s.rect.y - 20)) and ((b.rect.x <= s.rect.x)):
-                    #print('right')
                     direction = 'right'
                     AIDirection2.append(direction)
                     f_change = (snakewidth + margin)
                     g_change = 0
                     break
                 if (b.rect.y <= (s.rect.y + 20)) and (b.rect.y >= (s.rect.y - 20)) and ((b.rect.x >= s.rect.x)):
-                    #print('left')
                     direction = 'left'
                     AIDirection2.append(direction)
                     f_change = (snakewidth + margin) * -1
@@ -3568,7 +3218,7 @@ def hardobstaclegame(): #level 9 and 10
         titleobj = text.render(str(score), True, WHITE)
         titlerect = titleobj.get_rect()
         titlerect.x = 5
-        titlerect.y = 0
+        titlerect.y = 5
         DISPLAYSURF.blit(titleobj,titlerect)        
         
         pygame.display.flip()
@@ -3578,4 +3228,4 @@ def hardobstaclegame(): #level 9 and 10
         create-=1 #subtract from create to keep track of apple spawning
         all_sprites_list.remove(old_segment)
 
-obstaclegame()
+hardobstaclegame()
