@@ -258,13 +258,13 @@ def specialcollision(badsnake,snake,food,pics,sound,music):
                         easygame()
                     if event.key==K_2:
                         mediumgame()
-                    if event.key==K_3:
+                    if event.key==K_3 or event.key==K_4:
                         hardgame()
-                    if event.key==K_4:
+                    if event.key==K_5 or event.key==K_6:
                         hardgame2()
-                    if event.key==K_5:
+                    if event.key==K_7 or event.key==K_8:
                         obstaclegame()
-                    if event.key==K_6:
+                    if event.key==K_9 or event.key==K_0:
                         hardobstaclegame()
                 # if quit, exit
                 if event.type == pygame.QUIT:
@@ -644,13 +644,13 @@ def gameover(gm,snake):
                     easygame()
                 if event.key==K_2:
                     mediumgame()
-                if event.key==K_3:
+                if event.key==K_3 or event.key==K_4:
                     hardgame()
-                if event.key==K_4:
+                if event.key==K_5 or event.key==K_6:
                     hardgame2()
-                if event.key==K_5:
+                if event.key==K_7 or event.key==K_8:
                     obstaclegame()
-                if event.key==K_6:
+                if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
             # if quit, exit
             if event.type == pygame.QUIT:
@@ -748,13 +748,13 @@ def cutscene():
                     easygame()
                 if event.key==K_2:
                     mediumgame()
-                if event.key==K_3:
+                if event.key==K_3 or event.key==K_4:
                     hardgame()
-                if event.key==K_4:
+                if event.key==K_5 or event.key==K_6:
                     hardgame2()
-                if event.key==K_5:
+                if event.key==K_7 or event.key==K_8:
                     obstaclegame()
-                if event.key==K_6:
+                if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
                 if event.key==K_SPACE:
                     start()
@@ -894,34 +894,7 @@ def cutscene():
             Apples.append(apple)
             all_sprites_list.add(apple)
             create=30
-
-##        if create==15: #when create is 25, add special reduction apple
-##            applex = random.randint(0, 770)
-##            appley = random.randint(0, 470)
-##            apple=BadApple(applex,appley)
-##            BadApples.append(apple)
-##            for s in snake_segments:
-##                if applex>=s.rect.x and applex<=(s.rect.x+20):
-##                    applex+=30
-##                if applex>=s.rect.y and applex<=(s.rect.y+20):
-##                    appley+=30
-##            for s in badsnake_segments:
-##                if applex>=s.rect.x and applex<=(s.rect.x+20):
-##                    applex+=30
-##                if applex>=s.rect.y and applex<=(s.rect.y+20):
-##                    appley+=30
-##            if applex<0:
-##                applex=0
-##            if applex>780:
-##                applex=780
-##            if appley<=0:
-##                appley=0
-##            if appley>=480:
-##                appley=480
-##            apple=BadApple(applex,appley)
-##            BadApples.append(apple)
-##            all_sprites_list.add(apple)
-
+            
         for event in pygame.event.get(): #if quit, quit
             if event.type==QUIT:
                 pygame.quit()
@@ -932,13 +905,13 @@ def cutscene():
                     easygame()
                 if event.key==K_2:
                     mediumgame()
-                if event.key==K_3:
+                if event.key==K_3 or event.key==K_4:
                     hardgame()
-                if event.key==K_4:
+                if event.key==K_5 or event.key==K_6:
                     hardgame2()
-                if event.key==K_5:
+                if event.key==K_7 or event.key==K_8:
                     obstaclegame()
-                if event.key==K_6:
+                if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
                 if event.key==K_SPACE:
                     start()
@@ -1168,14 +1141,15 @@ def cutscene():
                         easygame()
                     if event.key==K_2:
                         mediumgame()
-                    if event.key==K_3:
+                    if event.key==K_3 or event.key==K_4:
                         hardgame()
-                    if event.key==K_4:
+                    if event.key==K_5 or event.key==K_6:
                         hardgame2()
-                    if event.key==K_5:
+                    if event.key==K_7 or event.key==K_8:
                         obstaclegame()
-                    if event.key==K_6:
+                    if event.key==K_9 or event.key==K_0:
                         hardobstaclegame()
+
                 # if quit, exit
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -1347,14 +1321,15 @@ def start(): #start screen
                     easygame()
                 if event.key==K_2:
                     mediumgame()
-                if event.key==K_3:
+                if event.key==K_3 or event.key==K_4:
                     hardgame()
-                if event.key==K_4:
+                if event.key==K_5 or event.key==K_6:
                     hardgame2()
-                if event.key==K_5:
+                if event.key==K_7 or event.key==K_8:
                     obstaclegame()
-                if event.key==K_6:
+                if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
+
             #if quit, exit
             elif event.type==pygame.QUIT:
                 pygame.quit()
@@ -1491,14 +1466,15 @@ def start(): #start screen
                     easygame()
                 if event.key==K_2:
                     mediumgame()
-                if event.key==K_3:
+                if event.key==K_3 or event.key==K_4:
                     hardgame()
-                if event.key==K_4:
+                if event.key==K_5 or event.key==K_6:
                     hardgame2()
-                if event.key==K_5:
+                if event.key==K_7 or event.key==K_8:
                     obstaclegame()
-                if event.key==K_6:
+                if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
+
             #if quit, exit
             elif event.type==pygame.QUIT:
                 pygame.quit()
@@ -1660,14 +1636,15 @@ def start(): #start screen
                         easygame()
                     if event.key==K_2:
                         mediumgame()
-                    if event.key==K_3:
+                    if event.key==K_3 or event.key==K_4:
                         hardgame()
-                    if event.key==K_4:
+                    if event.key==K_5 or event.key==K_6:
                         hardgame2()
-                    if event.key==K_5:
+                    if event.key==K_7 or event.key==K_8:
                         obstaclegame()
-                    if event.key==K_6:
+                    if event.key==K_9 or event.key==K_0:
                         hardobstaclegame()
+
                 #if quit, exit
                 elif event.type==pygame.QUIT:
                     pygame.quit()
@@ -1777,14 +1754,15 @@ def instructions():
                     easygame()
                 if event.key==K_2:
                     mediumgame()
-                if event.key==K_3:
+                if event.key==K_3 or event.key==K_4:
                     hardgame()
-                if event.key==K_4:
+                if event.key==K_5 or event.key==K_6:
                     hardgame2()
-                if event.key==K_5:
+                if event.key==K_7 or event.key==K_8:
                     obstaclegame()
-                if event.key==K_6:
+                if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
+
             # if quit, exit
             elif event.type == pygame.QUIT:
                 pygame.quit()
@@ -1928,14 +1906,15 @@ def easygame(): #level 1
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -2004,13 +1983,13 @@ def easygame(): #level 1
                     easygame()
                 if event.key==K_2:
                     mediumgame()
-                if event.key==K_3:
+                if event.key==K_3 or event.key==K_4:
                     hardgame()
-                if event.key==K_4:
+                if event.key==K_5 or event.key==K_6:
                     hardgame2()
-                if event.key==K_5:
+                if event.key==K_7 or event.key==K_8:
                     obstaclegame()
-                if event.key==K_6:
+                if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
 
                 #if there is more than two directions, remove first term in list
@@ -2186,14 +2165,15 @@ def mediumgame(): #level 2
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -2293,14 +2273,15 @@ def mediumgame(): #level 2
                     easygame()
                 if event.key==K_2:
                     mediumgame()
-                if event.key==K_3:
+                if event.key==K_3 or event.key==K_4:
                     hardgame()
-                if event.key==K_4:
+                if event.key==K_5 or event.key==K_6:
                     hardgame2()
-                if event.key==K_5:
+                if event.key==K_7 or event.key==K_8:
                     obstaclegame()
-                if event.key==K_6:
+                if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
+
 
                 #if there is more than two directions, remove first term in list
                 if len(Direction)>2:
@@ -2401,7 +2382,7 @@ def hardgame(): #level 3 and 4
     snake_segments=[]
     for i in range(3):
         x=(x_change+margin)*i+5
-        y=345
+        y=445
         segment=Snake(x,y)
         #add segment to sprites list and snake list
         snake_segments.append(segment)
@@ -2478,14 +2459,15 @@ def hardgame(): #level 3 and 4
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -2629,13 +2611,13 @@ def hardgame(): #level 3 and 4
                     easygame()
                 if event.key==K_2:
                     mediumgame()
-                if event.key==K_3:
+                if event.key==K_3 or event.key==K_4:
                     hardgame()
-                if event.key==K_4:
+                if event.key==K_5 or event.key==K_6:
                     hardgame2()
-                if event.key==K_5:
+                if event.key==K_7 or event.key==K_8:
                     obstaclegame()
-                if event.key==K_6:
+                if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
 
                 #if there is more than two directions, remove first term in list
@@ -2845,14 +2827,15 @@ def hardgame(): #level 3 and 4
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -2968,14 +2951,15 @@ def hardgame(): #level 3 and 4
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -3065,7 +3049,7 @@ def hardgame2(): #level 5 and 6
     snake_segments=[]
     for i in range(3):
         x=(x_change+margin)*i+5
-        y=465
+        y=445
         segment=Snake(x,y)
         #add segment to sprites list and snake list
         snake_segments.append(segment)
@@ -3142,14 +3126,15 @@ def hardgame2(): #level 5 and 6
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -3293,14 +3278,15 @@ def hardgame2(): #level 5 and 6
                     easygame()
                 if event.key==K_2:
                     mediumgame()
-                if event.key==K_3:
+                if event.key==K_3 or event.key==K_4:
                     hardgame()
-                if event.key==K_4:
+                if event.key==K_5 or event.key==K_6:
                     hardgame2()
-                if event.key==K_5:
+                if event.key==K_7 or event.key==K_8:
                     obstaclegame()
-                if event.key==K_6:
+                if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
+
 
                 #if there is more than two directions, remove first term in list
                 if len(Direction)>2:
@@ -3562,14 +3548,15 @@ def hardgame2(): #level 5 and 6
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -3684,14 +3671,15 @@ def hardgame2(): #level 5 and 6
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -3779,7 +3767,7 @@ def obstaclegame(): #level 7 and 8
     snake_segments=[]
     for i in range(3):
         x=(x_change+margin)*i+5
-        y=465
+        y=445
         segment=Snake(x,y)
         #add segment to sprites list and snake list
         snake_segments.append(segment)
@@ -3858,14 +3846,15 @@ def obstaclegame(): #level 7 and 8
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     #if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -4102,13 +4091,15 @@ def obstaclegame(): #level 7 and 8
                     easygame()
                 if event.key==K_2:
                     mediumgame()
-                if event.key==K_3:
+                if event.key==K_3 or event.key==K_4:
                     hardgame()
-                if event.key==K_4:
+                if event.key==K_5 or event.key==K_6:
                     hardgame2()
-                if event.key==K_5:
+                if event.key==K_7 or event.key==K_8:
                     obstaclegame()
-                if event.key==K_6:
+                if event.key==K_9 or event.key==K_10:
+                    hardobstaclegame()
+
                     hardobstaclegame()
 
                 #if there is more than two directions, remove first term in list
@@ -4381,14 +4372,15 @@ def obstaclegame(): #level 7 and 8
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -4503,14 +4495,15 @@ def obstaclegame(): #level 7 and 8
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -4707,14 +4700,15 @@ def hardobstaclegame(): #level 9 and 10
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     #if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -5297,14 +5291,15 @@ def hardobstaclegame(): #level 9 and 10
                     easygame()
                 if event.key==K_2:
                     mediumgame()
-                if event.key==K_3:
+                if event.key==K_3 or event.key==K_4:
                     hardgame()
-                if event.key==K_4:
+                if event.key==K_5 or event.key==K_6:
                     hardgame2()
-                if event.key==K_5:
+                if event.key==K_7 or event.key==K_8:
                     obstaclegame()
-                if event.key==K_6:
+                if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
+
                 #if there is more than two directions, remove first term in list
                 if len(Direction)>2:
                     Direction.pop(0)
@@ -5394,14 +5389,15 @@ def hardobstaclegame(): #level 9 and 10
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -5526,14 +5522,15 @@ def hardobstaclegame(): #level 9 and 10
                             easygame()
                         if event.key==K_2:
                             mediumgame()
-                        if event.key==K_3:
+                        if event.key==K_3 or event.key==K_4:
                             hardgame()
-                        if event.key==K_4:
+                        if event.key==K_5 or event.key==K_6:
                             hardgame2()
-                        if event.key==K_5:
+                        if event.key==K_7 or event.key==K_8:
                             obstaclegame()
-                        if event.key==K_6:
+                        if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
