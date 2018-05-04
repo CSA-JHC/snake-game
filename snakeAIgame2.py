@@ -895,32 +895,32 @@ def cutscene():
             all_sprites_list.add(apple)
             create=30
 
-        if create==15: #when create is 25, add special reduction apple
-            applex = random.randint(0, 770)
-            appley = random.randint(0, 470)
-            apple=BadApple(applex,appley)
-            BadApples.append(apple)
-            for s in snake_segments:
-                if applex>=s.rect.x and applex<=(s.rect.x+20):
-                    applex+=30
-                if applex>=s.rect.y and applex<=(s.rect.y+20):
-                    appley+=30
-            for s in badsnake_segments:
-                if applex>=s.rect.x and applex<=(s.rect.x+20):
-                    applex+=30
-                if applex>=s.rect.y and applex<=(s.rect.y+20):
-                    appley+=30
-            if applex<0:
-                applex=0
-            if applex>780:
-                applex=780
-            if appley<=0:
-                appley=0
-            if appley>=480:
-                appley=480
-            apple=BadApple(applex,appley)
-            BadApples.append(apple)
-            all_sprites_list.add(apple)
+##        if create==15: #when create is 25, add special reduction apple
+##            applex = random.randint(0, 770)
+##            appley = random.randint(0, 470)
+##            apple=BadApple(applex,appley)
+##            BadApples.append(apple)
+##            for s in snake_segments:
+##                if applex>=s.rect.x and applex<=(s.rect.x+20):
+##                    applex+=30
+##                if applex>=s.rect.y and applex<=(s.rect.y+20):
+##                    appley+=30
+##            for s in badsnake_segments:
+##                if applex>=s.rect.x and applex<=(s.rect.x+20):
+##                    applex+=30
+##                if applex>=s.rect.y and applex<=(s.rect.y+20):
+##                    appley+=30
+##            if applex<0:
+##                applex=0
+##            if applex>780:
+##                applex=780
+##            if appley<=0:
+##                appley=0
+##            if appley>=480:
+##                appley=480
+##            apple=BadApple(applex,appley)
+##            BadApples.append(apple)
+##            all_sprites_list.add(apple)
 
         for event in pygame.event.get(): #if quit, quit
             if event.type==QUIT:
@@ -1275,8 +1275,9 @@ def start(): #start screen
         scores=[]
         file=open('highscores.txt','r')
         for line in file:
+            line=line.strip('\n')
             scores.append(int(line))
-        blitscore=scores[0]
+        blitscore=max(scores)
 
         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
         #highscore font, blit in center
@@ -1287,7 +1288,7 @@ def start(): #start screen
         DISPLAYSURF.blit(overobj, overrect)
 
         #title font, blit in center
-        titleobj = text.render('Snake', True, WHITE)
+        titleobj = text.render('SNAKE', True, WHITE)
         titlerect = titleobj.get_rect()
         titlerect.centerx = DISPLAYSURF.get_rect().centerx
         titlerect.centery = DISPLAYSURF.get_rect().centery-180
@@ -1800,6 +1801,8 @@ def easygame(): #level 1
     pygame.init()
     pygame.mixer.init()
 
+    score=0
+
     BG=(0,0,0)
     BROWN=(139,69,19)
     WHITE=(255,255,255)
@@ -2116,13 +2119,13 @@ def mediumgame(): #level 2
         all_sprites_list.add(segment)
     #starter snake - AI
     badsnake_segments = []
-##    for i in range(3):
-##        a = (a_change + margin) * i + 5
-##        b = 35
-##        segment = AISnake(a, b)
-##        # add segment to sprites list and badsnake list
-##        badsnake_segments.append(segment)
-##        #all_sprites_list.add(segment)
+    for i in range(3):
+        a = (a_change + margin) * i + 5
+        b = 35
+        segment = AISnake(a, b)
+        # add segment to sprites list and badsnake list
+        badsnake_segments.append(segment)
+        #all_sprites_list.add(segment)
 
     while True:
         check(badsnake_segments,snake_segments,Direction,all_sprites_list,bgmusic,AIDirection,a_change,b_change,snakewidth,margin)  # check lives
