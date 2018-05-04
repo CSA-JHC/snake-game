@@ -4097,7 +4097,7 @@ def obstaclegame(): #level 7 and 8
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
                     obstaclegame()
-                if event.key==K_9 or event.key==K_10:
+                if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
 
                     hardobstaclegame()
