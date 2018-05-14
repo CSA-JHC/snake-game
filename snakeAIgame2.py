@@ -24,10 +24,6 @@
 ##by eating the red apples. The green apples makes you lose a point.
 ##Levels increase based on the amount of points you have.
 
-#add more audio (change gameover/intro music)
-##"happy music" for intro and gameover?
-#press enter for next level
-
 #CHEAT CODES
 #level 1 = 1 (easy)
 #level 2 = 2 (medium)
@@ -247,7 +243,7 @@ def specialcollision(badsnake,snake,food,pics,sound,music):
                     x,y=pygame.mouse.get_pos()
                     if x>250 and x<550 and y>310 and y<355:
                         end_it=True
-                        bgmusic.stop()
+                        music.stop()
                         cutscene()
                     #if mouse says quit
                     if x>355 and x<445 and y>365 and y<400:
@@ -255,19 +251,32 @@ def specialcollision(badsnake,snake,food,pics,sound,music):
                         pygame.quit()
                         sys.exit()
                 if event.type==pygame.KEYDOWN:
+                    if event.key==K_RETURN:
+                        end_it=True
+                        music.stop()
+                        cutscene()
                     #when the key is pressed, change level
                     if event.key==K_1:
+                        end_it=True
                         easygame()
                     if event.key==K_2:
+                        end_it=True
                         mediumgame()
                     if event.key==K_3 or event.key==K_4:
+                        end_it=True
                         hardgame()
                     if event.key==K_5 or event.key==K_6:
+                        end_it=True
                         hardgame2()
                     if event.key==K_7 or event.key==K_8:
+                        end_it=True
                         obstaclegame()
                     if event.key==K_9 or event.key==K_0:
+                        end_it=True
                         hardobstaclegame()
+                    if event.key==K_Q:
+                        pygame.quit()
+                        sys.exit()
                 # if quit, exit
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -600,30 +609,46 @@ def gameover(gm,snake):
     end_it = False
     while (end_it == False):
         #blit game over on screen
-        textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
+        textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)        
         overobj = textbasics.render('Game Over', True, RED)
         overrect = overobj.get_rect()
-        overrect.centerx = DISPLAYSURF.get_rect().centerx
+        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
         overrect.centery = DISPLAYSURF.get_rect().centery - 45
         DISPLAYSURF.blit(overobj, overrect)
         #blit the score
         scoreobj=textbasics.render('Score: '+str(score), True, RED)
         scorerect=scoreobj.get_rect()
-        scorerect.centerx=DISPLAYSURF.get_rect().centerx
+        scorerect.centerx=DISPLAYSURF.get_rect().centerx#+90
         scorerect.centery=DISPLAYSURF.get_rect().centery
         DISPLAYSURF.blit(scoreobj, scorerect)
         #blit play again
         scoreobj=textbasics.render('Click to Play Again', True, GREEN)
         scorerect=scoreobj.get_rect()
-        scorerect.centerx=DISPLAYSURF.get_rect().centerx
+        scorerect.centerx=DISPLAYSURF.get_rect().centerx#+90
         scorerect.centery=DISPLAYSURF.get_rect().centery+90
         DISPLAYSURF.blit(scoreobj, scorerect)
         #blit quit
         quitobj=textbasics.render('QUIT', True, GREEN)
         quitrect=quitobj.get_rect()
-        quitrect.centerx=DISPLAYSURF.get_rect().centerx
+        quitrect.centerx=DISPLAYSURF.get_rect().centerx#+90
         quitrect.centery=DISPLAYSURF.get_rect().centery+135
         DISPLAYSURF.blit(quitobj, quitrect)
+        
+##        textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
+##        topobj=textbasics.render('TOP TEN',True,GREEN)
+##        toprect=topobj.get_rect()
+##        toprect.centerx=DISPLAYSURF.get_rect().centerx-225
+##        toprect.centery=DISPLAYSURF.get_rect().centery-170
+##        DISPLAYSURF.blit(topobj,toprect)
+##        x=-170
+##        for i in listscore:
+##            x=x
+##            scobj=textbasics.render(str(i),True,GREEN)
+##            scorect=scobj.get_rect()
+##            scorect.centerx=DISPLAYSURF.get_rect().centerx-225
+##            x=x+35
+##            scorect.centery=DISPLAYSURF.get_rect().centery+(x)
+##            DISPLAYSURF.blit(scobj,scorect)
 
         for event in pygame.event.get():
             #if click screen, go to start screen
@@ -641,19 +666,32 @@ def gameover(gm,snake):
                     pygame.quit()
                     sys.exit()
             if event.type==pygame.KEYDOWN:
+                if event.key==K_RETURN:
+                    end_it=True
+                    gm.stop()
+                    cutscene()
                 #when the key is pressed, change level
                 if event.key==K_1:
+                    end_it=True
                     easygame()
                 if event.key==K_2:
+                    end_it=True
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
+                    end_it=True
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
+                    end_it=True
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
+                    end_it=True
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
+                    end_it=True
                     hardobstaclegame()
+                if event.key==K_q:
+                    pygame.quit()
+                    sys.exit()
             # if quit, exit
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -796,20 +834,29 @@ def cutscene():
             elif event.type==pygame.KEYDOWN:
                 #when the key is pressed, change direction
                 if event.key==K_1:
+                    end_it=True
                     easygame()
                 if event.key==K_2:
+                    end_it=True
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
+                    end_it=True
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
+                    end_it=True
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
+                    end_it=True
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
+                    end_it=True
                     hardobstaclegame()
                 if event.key==K_SPACE:
+                    end_it=True
                     easygame()
-
+                if event.key==K_q:
+                    pygame.quit()
+                    sys.exit()
             #if quit, exit
             elif event.type==pygame.QUIT:
                 pygame.quit()
@@ -1148,7 +1195,7 @@ def cutscene():
         all_sprites_list.add(badsegment)
 
         try:
-            #continuously update snake to maintain length -- CRASHING HERE?
+            #continuously update snake to maintain length
             old_segment=badsnake_segments.pop()
             all_sprites_list.remove(old_segment)
             old_segment=snake_segments.pop()
@@ -1158,16 +1205,22 @@ def cutscene():
                 if event.type==pygame.KEYDOWN:
                     #when the key is pressed, change level
                     if event.key==K_1:
+                        end_it=True
                         easygame()
                     if event.key==K_2:
+                        end_it=True
                         mediumgame()
                     if event.key==K_3 or event.key==K_4:
+                        end_it=True
                         hardgame()
                     if event.key==K_5 or event.key==K_6:
+                        end_it=True
                         hardgame2()
                     if event.key==K_7 or event.key==K_8:
+                        end_it=True
                         obstaclegame()
                     if event.key==K_9 or event.key==K_0:
+                        end_it=True
                         hardobstaclegame()
 
                 # if quit, exit
@@ -1216,55 +1269,67 @@ def instructions():
     end_it=False
     while (end_it==False):
 
-        text = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
+        text = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 25)
 
         #instructions, blit to start screen
         titleobj = text.render('INSTRUCTIONS', True, WHITE)
         titlerect = titleobj.get_rect()
         titlerect.centerx = DISPLAYSURF.get_rect().centerx
-        titlerect.centery = DISPLAYSURF.get_rect().centery-180
+        titlerect.centery = DISPLAYSURF.get_rect().centery-200
         DISPLAYSURF.blit(titleobj, titlerect)
         
         moveobj = text.render('1. Use WASD to move up and down', True, WHITE)
         moverect = moveobj.get_rect()
         moverect.centerx = DISPLAYSURF.get_rect().centerx-90
-        moverect.centery = DISPLAYSURF.get_rect().centery-135
+        moverect.centery = DISPLAYSURF.get_rect().centery-160
         DISPLAYSURF.blit(moveobj, moverect)
 
         goalobj = text.render('2. Try to get five points (or apples) per level', True, WHITE)
         goalrect = moveobj.get_rect()
         goalrect.centerx = DISPLAYSURF.get_rect().centerx-90
-        goalrect.centery = DISPLAYSURF.get_rect().centery-90
+        goalrect.centery = DISPLAYSURF.get_rect().centery-120
         DISPLAYSURF.blit(goalobj, goalrect)
 
         badappleobj = text.render('3. Green Apples reduce score by 2 points', True, WHITE)
         badapplerect = moveobj.get_rect()
         badapplerect.centerx = DISPLAYSURF.get_rect().centerx-90
-        badapplerect.centery = DISPLAYSURF.get_rect().centery-45
+        badapplerect.centery = DISPLAYSURF.get_rect().centery-80
         DISPLAYSURF.blit(badappleobj, badapplerect)
 
         appleobj = text.render('4. Red apples increase score by 1 point', True, WHITE)
         applerect = moveobj.get_rect()
         applerect.centerx = DISPLAYSURF.get_rect().centerx-90
-        applerect.centery = DISPLAYSURF.get_rect().centery
+        applerect.centery = DISPLAYSURF.get_rect().centery-40
         DISPLAYSURF.blit(appleobj, applerect)
         
         AIobj = text.render('5. AI Snakes will try to eat apples and will chase you', True, WHITE)
         AIrect = moveobj.get_rect()
         AIrect.centerx = DISPLAYSURF.get_rect().centerx-90
-        AIrect.centery = DISPLAYSURF.get_rect().centery+45
+        AIrect.centery = DISPLAYSURF.get_rect().centery
         DISPLAYSURF.blit(AIobj, AIrect)
         
         levelobj = text.render('6. Difficulty increases by level!', True, WHITE)
         levelrect = moveobj.get_rect()
         levelrect.centerx = DISPLAYSURF.get_rect().centerx-90
-        levelrect.centery = DISPLAYSURF.get_rect().centery+90
+        levelrect.centery = DISPLAYSURF.get_rect().centery+40
         DISPLAYSURF.blit(levelobj, levelrect)
+
+        keyobj=text.render('7. Press Enter or click to go to the next level/play again', True, WHITE)
+        keyrect=moveobj.get_rect()
+        keyrect.centerx=DISPLAYSURF.get_rect().centerx-90
+        keyrect.centery=DISPLAYSURF.get_rect().centery+80
+        DISPLAYSURF.blit(keyobj,keyrect)
+
+        quitobj=text.render('8. Press "Q" to quit the game',True,WHITE)
+        quitrect=moveobj.get_rect()
+        quitrect.centerx=DISPLAYSURF.get_rect().centerx-90
+        quitrect.centery=DISPLAYSURF.get_rect().centery+120
+        DISPLAYSURF.blit(quitobj,quitrect)
 
         backobj=text.render('Click to go Back',True,WHITE)
         backrect=backobj.get_rect()
         backrect.centerx=DISPLAYSURF.get_rect().centerx
-        backrect.centery=DISPLAYSURF.get_rect().centery+180
+        backrect.centery=DISPLAYSURF.get_rect().centery+160
         DISPLAYSURF.blit(backobj,backrect)
 
         for event in pygame.event.get():
@@ -1276,17 +1341,26 @@ def instructions():
             elif event.type==pygame.KEYDOWN:
                 #when the key is pressed, change direction
                 if event.key==K_1:
+                    end_it=True
                     easygame()
                 if event.key==K_2:
+                    end_it=True
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
+                    end_it=True
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
+                    end_it=True
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
+                    end_it=True
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
+                    end_it=True
                     hardobstaclegame()
+                if event.key==K_q:
+                    pygame.quit()
+                    sys.exit()
 
             # if quit, exit
             elif event.type == pygame.QUIT:
@@ -1427,18 +1501,36 @@ def easygame(): #level 1
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
                         #when the key is pressed, change level
+                        if event.key==K_RETURN:
+                            end_it=True
+                            level+=1
+                            if score>=5:
+                                bgmusic.stop()
+                                mediumgame()
+                            else:
+                                bgmusic.stop()
+                                easygame()
                         if event.key==K_1:
+                            end_it=True
                             easygame()
                         if event.key==K_2:
+                            end_it=True
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
                             hardobstaclegame()
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
 
                     # if quit, exit
                     if event.type == pygame.QUIT:
@@ -1505,17 +1597,26 @@ def easygame(): #level 1
                     y_change =(snakeheight+margin)
                 #when the key is pressed, change level
                 if event.key==K_1:
+                    end_it=True
                     easygame()
                 if event.key==K_2:
+                    end_it=True
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
+                    end_it=True
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
+                    end_it=True
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
+                    end_it=True
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
+                    end_it=True
                     hardobstaclegame()
+                if event.key==K_q:
+                    pygame.quit()
+                    sys.exit()
 
                 #if there is more than two directions, remove first term in list
                 if len(Direction)>2:
@@ -1685,19 +1786,37 @@ def mediumgame(): #level 2
                             pygame.quit()
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
+                        if event.key==K_RETURN:
+                            end_it=True
+                            level+=1
+                            if score>=10:
+                                bgmusic.stop()
+                                hardgame()
+                            else:
+                                bgmusic.stop()
+                                mediumgame()
                         #when the key is pressed, change level
                         if event.key==K_1:
+                            end_it=True
                             easygame()
                         if event.key==K_2:
+                            end_it=True
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
                             hardobstaclegame()
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
 
                     # if quit, exit
                     if event.type == pygame.QUIT:
@@ -1795,17 +1914,26 @@ def mediumgame(): #level 2
                     y_change =(snakeheight+margin)
                 #when the key is pressed, change level
                 if event.key==K_1:
+                    end_it=True
                     easygame()
                 if event.key==K_2:
+                    end_it=True
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
+                    end_it=True
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
+                    end_it=True
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
+                    end_it=True
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
+                    end_it=True
                     hardobstaclegame()
+                if event.key==K_q:
+                    pygame.quit()
+                    sys.exit()
 
                 #if there is more than two directions, remove first term in list
                 if len(Direction)>2:
@@ -1978,19 +2106,37 @@ def hardgame(): #level 3 and 4
                             pygame.quit()
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
+                        if event.key==K_RETURN:
+                            end_it=True
+                            level+=1
+                            if score>=20:
+                                bgmusic.stop()
+                                hardgame2()
+                            else:
+                                bgmusic.stop()
+                                hardgame()
                         #when the key is pressed, change level
                         if event.key==K_1:
+                            end_it=True
                             easygame()
                         if event.key==K_2:
+                            end_it=True
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
                             hardobstaclegame()
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
 
                     # if quit, exit
                     if event.type == pygame.QUIT:
@@ -2132,17 +2278,27 @@ def hardgame(): #level 3 and 4
                     y_change =(snakeheight+margin)
                 #when the key is pressed, change level
                 if event.key==K_1:
+                    end_it=True
                     easygame()
                 if event.key==K_2:
+                    end_it=True
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
+                    end_it=True
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
+                    end_it=True
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
+                    end_it=True
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
+                    end_it=True
                     hardobstaclegame()
+                if event.key==K_q:
+                    pygame.quit()
+                    sys.exit()
+
 
                 #if there is more than two directions, remove first term in list
                 if len(Direction)>2:
@@ -2290,7 +2446,7 @@ def hardgame(): #level 3 and 4
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render('YOU GOT A HIGHSCORE!', True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -2302,7 +2458,7 @@ def hardgame(): #level 3 and 4
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render("You're in the Top 10!", True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -2310,27 +2466,44 @@ def hardgame(): #level 3 and 4
                 #blit you win on screen
                 overobj = textbasics.render('You Win!', True, RED)
                 overrect = overobj.get_rect()
-                overrect.centerx = DISPLAYSURF.get_rect().centerx
+                overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                 overrect.centery = DISPLAYSURF.get_rect().centery - 45
                 DISPLAYSURF.blit(overobj, overrect)
                 #blit the score
                 scoreobj=textbasics.render('Score: '+str(score), True, RED)
                 scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                scorerect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
                 againobj=textbasics.render('Click to Play Again', True, GREEN)
                 againrect=againobj.get_rect()
-                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 againrect.centery=DISPLAYSURF.get_rect().centery+90
                 DISPLAYSURF.blit(againobj, againrect)
                 #blit quit
                 quitobj=textbasics.render('QUIT', True, GREEN)
                 quitrect=quitobj.get_rect()
-                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 quitrect.centery=DISPLAYSURF.get_rect().centery+135
                 DISPLAYSURF.blit(quitobj, quitrect)
+
+##                #blit top ten scores
+##                textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
+##                topobj=textbasics.render('TOP TEN',True,GREEN)
+##                toprect=topobj.get_rect()
+##                toprect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                toprect.centery=DISPLAYSURF.get_rect().centery-170
+##                DISPLAYSURF.blit(topobj,toprect)
+##                x=-170
+##                for i in listscore:
+##                    x=x
+##                    scobj=textbasics.render(str(i),True,GREEN)
+##                    scorect=scobj.get_rect()
+##                    scorect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                    x=x+35
+##                    scorect.centery=DISPLAYSURF.get_rect().centery+(x)
+##                    DISPLAYSURF.blit(scobj,scorect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
@@ -2347,19 +2520,32 @@ def hardgame(): #level 3 and 4
                             pygame.quit()
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
-                        #when the key is pressed, change level
+                        if event.key==K_RETURN:
+                            end_it=True
+                            bgmusic.stop()
+                            cutscene()
+                    #when the key is pressed, change level
                         if event.key==K_1:
+                            end_it=True
                             easygame()
                         if event.key==K_2:
+                            end_it=True
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
                             hardobstaclegame()
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
 
                     # if quit, exit
                     if event.type == pygame.QUIT:
@@ -2415,7 +2601,7 @@ def hardgame(): #level 3 and 4
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render('YOU GOT A HIGHSCORE!', True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -2427,7 +2613,7 @@ def hardgame(): #level 3 and 4
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render("You're in the Top 10!", True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -2435,27 +2621,44 @@ def hardgame(): #level 3 and 4
                 #blit you win on screen
                 overobj = textbasics.render('You Win!', True, RED)
                 overrect = overobj.get_rect()
-                overrect.centerx = DISPLAYSURF.get_rect().centerx
+                overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                 overrect.centery = DISPLAYSURF.get_rect().centery - 45
                 DISPLAYSURF.blit(overobj, overrect)
                 #blit the score
                 scoreobj=textbasics.render('Score: '+str(score), True, RED)
                 scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                scorerect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
                 againobj=textbasics.render('Click to Play Again', True, GREEN)
                 againrect=againobj.get_rect()
-                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 againrect.centery=DISPLAYSURF.get_rect().centery+90
                 DISPLAYSURF.blit(againobj, againrect)
                 #blit quit
                 quitobj=textbasics.render('QUIT', True, GREEN)
                 quitrect=quitobj.get_rect()
-                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 quitrect.centery=DISPLAYSURF.get_rect().centery+135
                 DISPLAYSURF.blit(quitobj, quitrect)
+
+##                #blit top ten scores
+##                textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
+##                topobj=textbasics.render('TOP TEN',True,GREEN)
+##                toprect=topobj.get_rect()
+##                toprect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                toprect.centery=DISPLAYSURF.get_rect().centery-170
+##                DISPLAYSURF.blit(topobj,toprect)
+##                x=-170
+##                for i in listscore:
+##                    x=x
+##                    scobj=textbasics.render(str(i),True,GREEN)
+##                    scorect=scobj.get_rect()
+##                    scorect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                    x=x+35
+##                    scorect.centery=DISPLAYSURF.get_rect().centery+(x)
+##                    DISPLAYSURF.blit(scobj,scorect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
@@ -2472,19 +2675,32 @@ def hardgame(): #level 3 and 4
                             pygame.quit()
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
+                        if event.key==K_RETURN:
+                            end_it=True
+                            bgmusic.stop()
+                            cutscene()
                         #when the key is pressed, change level
                         if event.key==K_1:
+                            end_it=True
                             easygame()
                         if event.key==K_2:
+                            end_it=True
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
                             hardobstaclegame()
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
 
                     # if quit, exit
                     if event.type == pygame.QUIT:
@@ -2647,19 +2863,37 @@ def hardgame2(): #level 5 and 6
                             pygame.quit()
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
+                        if event.key==K_RETURN:
+                            end_it=True
+                            level+=1
+                            if score>=30:
+                                bgmusic.stop()
+                                obstaclegame()
+                            else:
+                                bgmusic.stop()
+                                hardgame2()
                         #when the key is pressed, change level
                         if event.key==K_1:
+                            end_it=True
                             easygame()
                         if event.key==K_2:
+                            end_it=True
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
                             hardobstaclegame()
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
 
                     # if quit, exit
                     if event.type == pygame.QUIT:
@@ -2812,6 +3046,9 @@ def hardgame2(): #level 5 and 6
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
+                if event.key==K_q:
+                    pygame.quit()
+                    sys.exit()
 
                 #if there is more than two directions, remove first term in list
                 if len(Direction)>2:
@@ -3012,7 +3249,7 @@ def hardgame2(): #level 5 and 6
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render('YOU GOT A HIGHSCORE!', True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -3024,7 +3261,7 @@ def hardgame2(): #level 5 and 6
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render("You're in the Top 10!", True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -3032,27 +3269,44 @@ def hardgame2(): #level 5 and 6
                 #blit you win on screen
                 overobj = textbasics.render('You Win!', True, RED)
                 overrect = overobj.get_rect()
-                overrect.centerx = DISPLAYSURF.get_rect().centerx
+                overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                 overrect.centery = DISPLAYSURF.get_rect().centery - 45
                 DISPLAYSURF.blit(overobj, overrect)
                 #blit the score
                 scoreobj=textbasics.render('Score: '+str(score), True, RED)
                 scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                scorerect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                againobj=textbasics.render('Click to Play Again', True, RED)
+                againobj=textbasics.render('Click to Play Again', True, GREEN)
                 againrect=againobj.get_rect()
-                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 againrect.centery=DISPLAYSURF.get_rect().centery+90
                 DISPLAYSURF.blit(againobj, againrect)
                 #blit quit
                 quitobj=textbasics.render('QUIT', True, GREEN)
                 quitrect=quitobj.get_rect()
-                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 quitrect.centery=DISPLAYSURF.get_rect().centery+135
                 DISPLAYSURF.blit(quitobj, quitrect)
+
+##                #blit top ten scores
+##                textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
+##                topobj=textbasics.render('TOP TEN',True,GREEN)
+##                toprect=topobj.get_rect()
+##                toprect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                toprect.centery=DISPLAYSURF.get_rect().centery-170
+##                DISPLAYSURF.blit(topobj,toprect)
+##                x=-170
+##                for i in listscore:
+##                    x=x
+##                    scobj=textbasics.render(str(i),True,GREEN)
+##                    scorect=scobj.get_rect()
+##                    scorect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                    x=x+35
+##                    scorect.centery=DISPLAYSURF.get_rect().centery+(x)
+##                    DISPLAYSURF.blit(scobj,scorect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
@@ -3069,19 +3323,32 @@ def hardgame2(): #level 5 and 6
                             pygame.quit()
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
+                        if event.key==K_RETURN:
+                            end_it=True
+                            bgmusic.stop()
+                            cutscene()
                         #when the key is pressed, change level
                         if event.key==K_1:
+                            end_it=True
                             easygame()
                         if event.key==K_2:
+                            end_it=True
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
                             hardobstaclegame()
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
 
                     # if quit, exit
                     if event.type == pygame.QUIT:
@@ -3136,7 +3403,7 @@ def hardgame2(): #level 5 and 6
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render('YOU GOT A HIGHSCORE!', True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -3148,7 +3415,7 @@ def hardgame2(): #level 5 and 6
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render("You're in the Top 10!", True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -3156,27 +3423,44 @@ def hardgame2(): #level 5 and 6
                 #blit you win on screen
                 overobj = textbasics.render('You Win!', True, RED)
                 overrect = overobj.get_rect()
-                overrect.centerx = DISPLAYSURF.get_rect().centerx
+                overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                 overrect.centery = DISPLAYSURF.get_rect().centery - 45
                 DISPLAYSURF.blit(overobj, overrect)
                 #blit the score
                 scoreobj=textbasics.render('Score: '+str(score), True, RED)
                 scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                scorerect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                againobj=textbasics.render('Click to Play Again', True, RED)
+                againobj=textbasics.render('Click to Play Again', True, GREEN)
                 againrect=againobj.get_rect()
-                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 againrect.centery=DISPLAYSURF.get_rect().centery+90
                 DISPLAYSURF.blit(againobj, againrect)
                 #blit quit
                 quitobj=textbasics.render('QUIT', True, GREEN)
                 quitrect=quitobj.get_rect()
-                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 quitrect.centery=DISPLAYSURF.get_rect().centery+135
                 DISPLAYSURF.blit(quitobj, quitrect)
+
+##                #blit top ten scores
+##                textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
+##                topobj=textbasics.render('TOP TEN',True,GREEN)
+##                toprect=topobj.get_rect()
+##                toprect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                toprect.centery=DISPLAYSURF.get_rect().centery-170
+##                DISPLAYSURF.blit(topobj,toprect)
+##                x=-170
+##                for i in listscore:
+##                    x=x
+##                    scobj=textbasics.render(str(i),True,GREEN)
+##                    scorect=scobj.get_rect()
+##                    scorect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                    x=x+35
+##                    scorect.centery=DISPLAYSURF.get_rect().centery+(x)
+##                    DISPLAYSURF.blit(scobj,scorect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
@@ -3194,18 +3478,31 @@ def hardgame2(): #level 5 and 6
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
                         #when the key is pressed, change level
+                        if event.key==K_RETURN:
+                            end_it=True
+                            bgmusic.stop()
+                            cutscene()
                         if event.key==K_1:
+                            end_it=True
                             easygame()
                         if event.key==K_2:
+                            end_it=True
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
                             hardobstaclegame()
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
 
                     # if quit, exit
                     if event.type == pygame.QUIT:
@@ -3368,19 +3665,37 @@ def obstaclegame(): #level 7 and 8
                             pygame.quit()
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
+                        if event.key==K_RETURN:
+                            end_it=True
+                            level+=1
+                            if score>=40:
+                                bgmusic.stop()
+                                hardobstaclegame()
+                            else:
+                                bgmusic.stop()
+                                obstaclegame()
                         #when the key is pressed, change level
                         if event.key==K_1:
+                            end_it=True
                             easygame()
                         if event.key==K_2:
+                            end_it=True
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
                             hardobstaclegame()
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
 
                     #if quit, exit
                     if event.type == pygame.QUIT:
@@ -3615,20 +3930,26 @@ def obstaclegame(): #level 7 and 8
                     y_change =(snakeheight+margin)
                 #when the key is pressed, change level
                 if event.key==K_1:
+                    end_it=True
                     easygame()
                 if event.key==K_2:
+                    end_it=True
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
+                    end_it=True
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
+                    end_it=True
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
+                    end_it=True
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
+                    end_it=True
                     hardobstaclegame()
-
-                    hardobstaclegame()
-
+                if event.key==K_q:
+                    pygame.quit()
+                    sys.exit()
                 #if there is more than two directions, remove first term in list
                 if len(Direction)>2:
                     Direction.pop(0)
@@ -3838,7 +4159,7 @@ def obstaclegame(): #level 7 and 8
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render('YOU GOT A HIGHSCORE!', True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -3850,7 +4171,7 @@ def obstaclegame(): #level 7 and 8
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render("You're in the Top 10!", True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -3858,27 +4179,44 @@ def obstaclegame(): #level 7 and 8
                 #blit you win on screen
                 overobj = textbasics.render('You Win!', True, RED)
                 overrect = overobj.get_rect()
-                overrect.centerx = DISPLAYSURF.get_rect().centerx
+                overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                 overrect.centery = DISPLAYSURF.get_rect().centery - 45
                 DISPLAYSURF.blit(overobj, overrect)
                 #blit the score
                 scoreobj=textbasics.render('Score: '+str(score), True, RED)
                 scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                scorerect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                againobj=textbasics.render('Click to Play Again', True, RED)
+                againobj=textbasics.render('Click to Play Again', True, GREEN)
                 againrect=againobj.get_rect()
-                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 againrect.centery=DISPLAYSURF.get_rect().centery+90
                 DISPLAYSURF.blit(againobj, againrect)
                 #blit quit
                 quitobj=textbasics.render('QUIT', True, GREEN)
                 quitrect=quitobj.get_rect()
-                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 quitrect.centery=DISPLAYSURF.get_rect().centery+135
                 DISPLAYSURF.blit(quitobj, quitrect)
+
+##                #blit top ten scores
+##                textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
+##                topobj=textbasics.render('TOP TEN',True,GREEN)
+##                toprect=topobj.get_rect()
+##                toprect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                toprect.centery=DISPLAYSURF.get_rect().centery-170
+##                DISPLAYSURF.blit(topobj,toprect)
+##                x=-170
+##                for i in listscore:
+##                    x=x
+##                    scobj=textbasics.render(str(i),True,GREEN)
+##                    scorect=scobj.get_rect()
+##                    scorect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                    x=x+35
+##                    scorect.centery=DISPLAYSURF.get_rect().centery+(x)
+##                    DISPLAYSURF.blit(scobj,scorect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
@@ -3895,19 +4233,32 @@ def obstaclegame(): #level 7 and 8
                             pygame.quit()
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
+                        if event.key==K_RETURN:
+                            end_it=True
+                            bgmusic.stop()
+                            cutscene()
                         #when the key is pressed, change level
                         if event.key==K_1:
+                            end_it=True
                             easygame()
                         if event.key==K_2:
+                            end_it=True
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
                             hardobstaclegame()
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
 
                     # if quit, exit
                     if event.type == pygame.QUIT:
@@ -3962,7 +4313,7 @@ def obstaclegame(): #level 7 and 8
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render('YOU GOT A HIGHSCORE!', True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -3974,7 +4325,7 @@ def obstaclegame(): #level 7 and 8
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render("You're in the Top 10!", True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -3982,27 +4333,44 @@ def obstaclegame(): #level 7 and 8
                 #blit you win on screen
                 overobj = textbasics.render('You Win!', True, RED)
                 overrect = overobj.get_rect()
-                overrect.centerx = DISPLAYSURF.get_rect().centerx
+                overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                 overrect.centery = DISPLAYSURF.get_rect().centery - 45
                 DISPLAYSURF.blit(overobj, overrect)
                 #blit the score
                 scoreobj=textbasics.render('Score: '+str(score), True, RED)
                 scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                scorerect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                againobj=textbasics.render('Click to Play Again', True, RED)
+                againobj=textbasics.render('Click to Play Again', True, GREEN)
                 againrect=againobj.get_rect()
-                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 againrect.centery=DISPLAYSURF.get_rect().centery+90
                 DISPLAYSURF.blit(againobj, againrect)
                 #blit quit
                 quitobj=textbasics.render('QUIT', True, GREEN)
                 quitrect=quitobj.get_rect()
-                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 quitrect.centery=DISPLAYSURF.get_rect().centery+135
                 DISPLAYSURF.blit(quitobj, quitrect)
+
+##                #blit top ten scores
+##                textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
+##                topobj=textbasics.render('TOP TEN',True,GREEN)
+##                toprect=topobj.get_rect()
+##                toprect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                toprect.centery=DISPLAYSURF.get_rect().centery-170
+##                DISPLAYSURF.blit(topobj,toprect)
+##                x=-170
+##                for i in listscore:
+##                    x=x
+##                    scobj=textbasics.render(str(i),True,GREEN)
+##                    scorect=scobj.get_rect()
+##                    scorect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                    x=x+35
+##                    scorect.centery=DISPLAYSURF.get_rect().centery+(x)
+##                    DISPLAYSURF.blit(scobj,scorect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
@@ -4019,20 +4387,32 @@ def obstaclegame(): #level 7 and 8
                             pygame.quit()
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
+                        if event.key==K_RETURN:
+                            end_it=True
+                            bgmusic.stop()
+                            cutscene()
                         #when the key is pressed, change level
                         if event.key==K_1:
+                            end_it=True
                             easygame()
                         if event.key==K_2:
+                            end_it=True
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
                             hardobstaclegame()
-
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
                     # if quit, exit
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -4063,7 +4443,7 @@ def obstaclegame(): #level 7 and 8
 
         create-=1 #subtract from create to keep track of apple spawning
 
-def hardobstaclegame(): #level 9 and 10
+def hardobstaclegame(): #level 9 and 10   --- NEEDS CLICK TO PLAY AGAIN
     global score
     global level
     global create
@@ -4224,6 +4604,32 @@ def hardobstaclegame(): #level 9 and 10
                             pygame.quit()
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
+                        if event.key==K_RETURN:
+                            end_it=True
+                            level+=1
+                            if score>=50:
+                                winobj=textbasics.render('You Win!', True, RED)
+                                winrect=winobj.get_rect()
+                                winrect.centerx=DISPLAYSURF.get_rect().centerx
+                                winrect.centery=DISPLAYSURF.get_rect().centery-45
+                                DISPLAYSURF.blit(winobj, winrect)
+                                scoreobj=textbasics.render('Score: '+str(score), True, RED)
+                                scorerect=scoreobj.get_rect()
+                                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                                scorerect.centery=DISPLAYSURF.get_rect().centery
+                                DISPLAYSURF.blit(scoreobj, scorerect)
+                                quitobj=textbasics.render('QUIT', True, GREEN)
+                                quitrect=quitobj.get_rect()
+                                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                                quitrect.centery=DISPLAYSURF.get_rect().centery+90
+                                DISPLAYSURF.blit(quitobj, quitrect)
+                                x,y=pygame.mouse.get_pos()
+                                if x>250 and x<550 and y>310 and y<355:
+                                    bgmusic.stop()
+                                    cutscene()
+                            else:
+                                bgmusic.stop()
+                                hardobstaclegame()
                         #when the key is pressed, change level
                         if event.key==K_1:
                             easygame()
@@ -4237,6 +4643,9 @@ def hardobstaclegame(): #level 9 and 10
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
 
                     #if quit, exit
                     if event.type == pygame.QUIT:
@@ -4828,6 +5237,9 @@ def hardobstaclegame(): #level 9 and 10
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
                     hardobstaclegame()
+                if event.key==K_q:
+                    pygame.quit()
+                    sys.exit()
 
                 #if there is more than two directions, remove first term in list
                 if len(Direction)>2:
@@ -4857,7 +5269,7 @@ def hardobstaclegame(): #level 9 and 10
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render('YOU GOT A HIGHSCORE!', True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -4869,7 +5281,7 @@ def hardobstaclegame(): #level 9 and 10
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render("You're in the Top 10!", True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -4877,27 +5289,44 @@ def hardobstaclegame(): #level 9 and 10
                 #blit you win on screen
                 overobj = textbasics.render('You Win!', True, RED)
                 overrect = overobj.get_rect()
-                overrect.centerx = DISPLAYSURF.get_rect().centerx
+                overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                 overrect.centery = DISPLAYSURF.get_rect().centery - 45
                 DISPLAYSURF.blit(overobj, overrect)
                 #blit the score
                 scoreobj=textbasics.render('Score: '+str(score), True, RED)
                 scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                scorerect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                againobj=textbasics.render('Click to Play Again', True, RED)
+                againobj=textbasics.render('Click to Play Again', True, GREEN)
                 againrect=againobj.get_rect()
-                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 againrect.centery=DISPLAYSURF.get_rect().centery+90
                 DISPLAYSURF.blit(againobj, againrect)
                 #blit quit
                 quitobj=textbasics.render('QUIT', True, GREEN)
                 quitrect=quitobj.get_rect()
-                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 quitrect.centery=DISPLAYSURF.get_rect().centery+135
                 DISPLAYSURF.blit(quitobj, quitrect)
+
+##                #blit top ten scores
+##                textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
+##                topobj=textbasics.render('TOP TEN',True,GREEN)
+##                toprect=topobj.get_rect()
+##                toprect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                toprect.centery=DISPLAYSURF.get_rect().centery-170
+##                DISPLAYSURF.blit(topobj,toprect)
+##                x=-170
+##                for i in listscore:
+##                    x=x
+##                    scobj=textbasics.render(str(i),True,GREEN)
+##                    scorect=scobj.get_rect()
+##                    scorect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                    x=x+35
+##                    scorect.centery=DISPLAYSURF.get_rect().centery+(x)
+##                    DISPLAYSURF.blit(scobj,scorect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
@@ -4914,6 +5343,9 @@ def hardobstaclegame(): #level 9 and 10
                             pygame.quit()
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
+                        if event.key==K_RETURN:
+                            bgmusic.stop()
+                            cutscene()
                         #when the key is pressed, change level
                         if event.key==K_1:
                             easygame()
@@ -4927,6 +5359,9 @@ def hardobstaclegame(): #level 9 and 10
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
 
                     # if quit, exit
                     if event.type == pygame.QUIT:
@@ -4991,7 +5426,7 @@ def hardobstaclegame(): #level 9 and 10
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render('YOU GOT A HIGHSCORE!', True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -5003,7 +5438,7 @@ def hardobstaclegame(): #level 9 and 10
                         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 40)
                         overobj = textbasics.render("You're in the Top 10!", True, RED)
                         overrect = overobj.get_rect()
-                        overrect.centerx = DISPLAYSURF.get_rect().centerx
+                        overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
                         end_it = True
@@ -5011,27 +5446,44 @@ def hardobstaclegame(): #level 9 and 10
                 #blit you win on screen
                 overobj = textbasics.render('You Win!', True, RED)
                 overrect = overobj.get_rect()
-                overrect.centerx = DISPLAYSURF.get_rect().centerx
+                overrect.centerx = DISPLAYSURF.get_rect().centerx#+90
                 overrect.centery = DISPLAYSURF.get_rect().centery - 45
                 DISPLAYSURF.blit(overobj, overrect)
                 #blit the score
                 scoreobj=textbasics.render('Score: '+str(score), True, RED)
                 scorerect=scoreobj.get_rect()
-                scorerect.centerx=DISPLAYSURF.get_rect().centerx
+                scorerect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 scorerect.centery=DISPLAYSURF.get_rect().centery
                 DISPLAYSURF.blit(scoreobj, scorerect)
                 #blit play again
-                againobj=textbasics.render('Click to Play Again', True, RED)
+                againobj=textbasics.render('Click to Play Again', True, GREEN)
                 againrect=againobj.get_rect()
-                againrect.centerx=DISPLAYSURF.get_rect().centerx
+                againrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 againrect.centery=DISPLAYSURF.get_rect().centery+90
                 DISPLAYSURF.blit(againobj, againrect)
                 #blit quit
                 quitobj=textbasics.render('QUIT', True, GREEN)
                 quitrect=quitobj.get_rect()
-                quitrect.centerx=DISPLAYSURF.get_rect().centerx
+                quitrect.centerx=DISPLAYSURF.get_rect().centerx#+90
                 quitrect.centery=DISPLAYSURF.get_rect().centery+135
                 DISPLAYSURF.blit(quitobj, quitrect)
+
+##                #blit top ten scores
+##                textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
+##                topobj=textbasics.render('TOP TEN',True,GREEN)
+##                toprect=topobj.get_rect()
+##                toprect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                toprect.centery=DISPLAYSURF.get_rect().centery-170
+##                DISPLAYSURF.blit(topobj,toprect)
+##                x=-170
+##                for i in listscore:
+##                    x=x
+##                    scobj=textbasics.render(str(i),True,GREEN)
+##                    scorect=scobj.get_rect()
+##                    scorect.centerx=DISPLAYSURF.get_rect().centerx-225
+##                    x=x+35
+##                    scorect.centery=DISPLAYSURF.get_rect().centery+(x)
+##                    DISPLAYSURF.blit(scobj,scorect)
 
                 for event in pygame.event.get():
                     #if click screen, go to start screen
@@ -5048,6 +5500,9 @@ def hardobstaclegame(): #level 9 and 10
                             pygame.quit()
                             sys.exit()
                     if event.type==pygame.KEYDOWN:
+                        if event.key==K_RETURN:
+                            bgmusic.stop()
+                            cutscene()
                         #when the key is pressed, change level
                         if event.key==K_1:
                             easygame()
@@ -5061,6 +5516,9 @@ def hardobstaclegame(): #level 9 and 10
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             hardobstaclegame()
+                        if event.key==K_q:
+                            pygame.quit()
+                            sys.exit()
 
                     # if quit, exit
                     if event.type == pygame.QUIT:
