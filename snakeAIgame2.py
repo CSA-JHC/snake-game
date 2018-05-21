@@ -33,7 +33,6 @@
 #level 6 = 9,10 (hardobstacle)
 
 #find credit image
-#fix initials
 
 import pygame,sys
 from pygame.locals import *
@@ -752,7 +751,7 @@ def gameover(gm,snake):
 
         pygame.display.flip()
 
-def credit(): ###############################
+def credit():
     pygame.init()
     pygame.mixer.init()
 
