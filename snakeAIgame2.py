@@ -32,13 +32,14 @@
 #level 5 = 7,8 (obstacle)
 #level 6 = 9,10 (hardobstacle)
 
-##find out a way to get players inital for scoreboard
+#find credit image
+#fix initials
 
 import pygame,sys
 from pygame.locals import *
 import random
 import time
-import tkinter as tk
+import os
 
 pygame.init()
 pygame.mixer.init()
@@ -54,7 +55,7 @@ YELLOW=(255,255,0)
 
 #set screen
 DISPLAYSURF = pygame.display.set_mode((800, 500))
-#DISPLAYSURF.fill(BG)
+#DISPLAYSURF.fill(WHITE)
 pygame.display.set_caption('Snake')
 
 #snake measurements per box
@@ -186,7 +187,6 @@ def specialcollision(badsnake,snake,food,pics,sound,music):
             for line in file:
                 listscore.append(int(line))  # add scores to a list
             listscore.append(score)  # add score to a list
-            listscore = sorted(listscore, reverse=True)  # sort list
             file.close()
 
             if score >= listscore[0]:  # if the score is >=highscore
@@ -199,6 +199,7 @@ def specialcollision(badsnake,snake,food,pics,sound,music):
                     overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                     overrect.centery = DISPLAYSURF.get_rect().centery - 90
                     DISPLAYSURF.blit(overobj, overrect)
+                    os.system('initialstk.py')
                     end_it = True
                 pygame.display.flip()
             elif score >= listscore[-1]:  # if the score is >=highscore
@@ -211,6 +212,7 @@ def specialcollision(badsnake,snake,food,pics,sound,music):
                     overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                     overrect.centery = DISPLAYSURF.get_rect().centery - 90
                     DISPLAYSURF.blit(overobj, overrect)
+                    os.system('initialstk.py')
                     end_it = True
                 pygame.display.flip()
             #blit you win on screen
@@ -244,10 +246,25 @@ def specialcollision(badsnake,snake,food,pics,sound,music):
             toprect.centerx=DISPLAYSURF.get_rect().centerx-225
             toprect.centery=DISPLAYSURF.get_rect().centery-170
             DISPLAYSURF.blit(topobj,toprect)
+
+            initials=[]
+            file=open('initials.txt','r')
+            for line in file:
+                line=line.replace('\n','')
+                initials.append(line)
+            file.close()
+            initials.reverse()
+
+            if len(initials)>10:
+                del initials[-1]
             x=-170
-            for i in listscore:
-                x=x
-                scobj=textbasics.render(str(i),True,WHITE)
+            for a,b in zip(listscore,initials):
+                y=str((a,b))
+                y=y.replace('(','')
+                y=y.replace(')','')
+                y=y.replace("'",'')
+                y=y.replace(',',' - ')
+                scobj=textbasics.render(str(y),True,WHITE)
                 scorect=scobj.get_rect()
                 scorect.centerx=DISPLAYSURF.get_rect().centerx-225
                 x=x+35
@@ -601,7 +618,7 @@ def gameover(gm,snake):
             overrect.centerx = DISPLAYSURF.get_rect().centerx+90
             overrect.centery = DISPLAYSURF.get_rect().centery - 135
             DISPLAYSURF.blit(overobj, overrect)
-            #initials()
+            os.system('initialstk.py')
             end_it=True
         pygame.display.flip()
     elif score>=listscore[-1]:
@@ -613,7 +630,7 @@ def gameover(gm,snake):
             overrect.centerx = DISPLAYSURF.get_rect().centerx+90
             overrect.centery = DISPLAYSURF.get_rect().centery - 135
             DISPLAYSURF.blit(overobj, overrect)
-            #initials()
+            os.system('initialstk.py')
             end_it=True
         pygame.display.flip()
 
@@ -654,17 +671,32 @@ def gameover(gm,snake):
         quitrect.centerx=DISPLAYSURF.get_rect().centerx+90
         quitrect.centery=DISPLAYSURF.get_rect().centery+135
         DISPLAYSURF.blit(quitobj, quitrect)
-        
+
         textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
         topobj=textbasics.render('TOP TEN',True,WHITE)
         toprect=topobj.get_rect()
         toprect.centerx=DISPLAYSURF.get_rect().centerx-225
         toprect.centery=DISPLAYSURF.get_rect().centery-170
         DISPLAYSURF.blit(topobj,toprect)
+
+        initials=[]
+        file=open('initials.txt','r')
+        for line in file:
+            line=line.replace('\n','')
+            initials.append(line)
+        file.close()
+        initials.reverse()
+
+        if len(initials)>10:
+            del initials[-1]
         x=-170
-        for i in listscore:
-            x=x
-            scobj=textbasics.render(str(i),True,WHITE)
+        for a,b in zip(listscore,initials):
+            y=str((a,b))
+            y=y.replace('(','')
+            y=y.replace(')','')
+            y=y.replace("'",'')
+            y=y.replace(',',' - ')
+            scobj=textbasics.render(str(y),True,WHITE)
             scorect=scobj.get_rect()
             scorect.centerx=DISPLAYSURF.get_rect().centerx-225
             x=x+35
@@ -720,19 +752,39 @@ def gameover(gm,snake):
 
         pygame.display.flip()
 
-##def initials():
-##    class Study(tk.Frame):
-##        def __init__(self, parent, controller):        
-##            tk.Frame.__init__(self, parent)
-##
-##            user=StringVar()
-##
-##            label=tk.Label(self, text="Enter Your Initials").grid(column=1,row=0)
-##
-##            name=tk.Entry(self, textvariable=user)
-##            name.grid(column=1,row=1,padx=5,pady=5)
-##            
-##            logoutbtn = tk.Button(self, text="Enter").grid(column=1,row=2, padx=5, pady=5)
+def credit(): ###############################
+    pygame.init()
+    pygame.mixer.init()
+
+    WHITE=(255,255,255)
+    
+    #set screen
+    DISPLAYSURF=pygame.display.set_mode((800,500))
+    DISPLAYSURF.fill(WHITE)
+    pygame.display.set_caption('Snake')
+
+    #sprite list
+    all_sprites_list=pygame.sprite.Group()
+
+    image=pygame.image.load('unicat.jpg')
+    #DISPLAYSURF.blit(image,(250, 125))
+
+    all_sprites_list.draw(image)
+
+    for event in pygame.event.get():
+        if event.type==pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        pygame.display.flip()
+
+    for ent in all_sprites_list:  # update all
+        ent.update()
+
+    #draw everything in list
+    all_sprites_list.draw(DISPLAYSURF)
+
+    time.sleep(2)
+    cutscene()
 
 def cutscene():
     global score
@@ -2483,6 +2535,7 @@ def hardgame(): #level 3 and 4
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 elif score >= listscore[-1]:  # if the score is >=highscore
@@ -2495,6 +2548,7 @@ def hardgame(): #level 3 and 4
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 #blit you win on screen
@@ -2520,7 +2574,7 @@ def hardgame(): #level 3 and 4
                 quitrect=quitobj.get_rect()
                 quitrect.centerx=DISPLAYSURF.get_rect().centerx+90
                 quitrect.centery=DISPLAYSURF.get_rect().centery+135
-                DISPLAYSURF.blit(quitobj, quitrect)
+                DISPLAYSURF.blit(quitobj, quitrect)  
 
                 #blit top ten scores
                 textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
@@ -2529,10 +2583,25 @@ def hardgame(): #level 3 and 4
                 toprect.centerx=DISPLAYSURF.get_rect().centerx-225
                 toprect.centery=DISPLAYSURF.get_rect().centery-170
                 DISPLAYSURF.blit(topobj,toprect)
+
+                initials=[]
+                file=open('initials.txt','r')
+                for line in file:
+                    line=line.replace('\n','')
+                    initials.append(line)
+                file.close()
+                initials.reverse()
+
+                if len(initials)>10:
+                    del initials[-1]
                 x=-170
-                for i in listscore:
-                    x=x
-                    scobj=textbasics.render(str(i),True,WHITE)
+                for a,b in zip(listscore,initials):
+                    y=str((a,b))
+                    y=y.replace('(','')
+                    y=y.replace(')','')
+                    y=y.replace("'",'')
+                    y=y.replace(',',' - ')
+                    scobj=textbasics.render(str(y),True,WHITE)
                     scorect=scobj.get_rect()
                     scorect.centerx=DISPLAYSURF.get_rect().centerx-225
                     x=x+35
@@ -2627,7 +2696,7 @@ def hardgame(): #level 3 and 4
                 file.close()
 
                 del listscore[-1]
-
+        
                 if score >= listscore[0]:  # if the score is >=highscore
                     end_it = False
                     while (end_it == False):
@@ -2638,6 +2707,7 @@ def hardgame(): #level 3 and 4
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 elif score >= listscore[-1]:  # if the score is >=highscore
@@ -2650,6 +2720,7 @@ def hardgame(): #level 3 and 4
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 #blit you win on screen
@@ -2675,7 +2746,7 @@ def hardgame(): #level 3 and 4
                 quitrect=quitobj.get_rect()
                 quitrect.centerx=DISPLAYSURF.get_rect().centerx+90
                 quitrect.centery=DISPLAYSURF.get_rect().centery+135
-                DISPLAYSURF.blit(quitobj, quitrect)
+                DISPLAYSURF.blit(quitobj, quitrect)  
 
                 #blit top ten scores
                 textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
@@ -2684,10 +2755,25 @@ def hardgame(): #level 3 and 4
                 toprect.centerx=DISPLAYSURF.get_rect().centerx-225
                 toprect.centery=DISPLAYSURF.get_rect().centery-170
                 DISPLAYSURF.blit(topobj,toprect)
+
+                initials=[]
+                file=open('initials.txt','r')
+                for line in file:
+                    line=line.replace('\n','')
+                    initials.append(line)
+                file.close()
+                initials.reverse()
+
+                if len(initials)>10:
+                    del initials[-1]
                 x=-170
-                for i in listscore:
-                    x=x
-                    scobj=textbasics.render(str(i),True,WHITE)
+                for a,b in zip(listscore,initials):
+                    y=str((a,b))
+                    y=y.replace('(','')
+                    y=y.replace(')','')
+                    y=y.replace("'",'')
+                    y=y.replace(',',' - ')
+                    scobj=textbasics.render(str(y),True,WHITE)
                     scorect=scobj.get_rect()
                     scorect.centerx=DISPLAYSURF.get_rect().centerx-225
                     x=x+35
@@ -3286,6 +3372,7 @@ def hardgame2(): #level 5 and 6
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 elif score >= listscore[-1]:  # if the score is >=highscore
@@ -3298,6 +3385,7 @@ def hardgame2(): #level 5 and 6
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 #blit you win on screen
@@ -3332,10 +3420,25 @@ def hardgame2(): #level 5 and 6
                 toprect.centerx=DISPLAYSURF.get_rect().centerx-225
                 toprect.centery=DISPLAYSURF.get_rect().centery-170
                 DISPLAYSURF.blit(topobj,toprect)
+
+                initials=[]
+                file=open('initials.txt','r')
+                for line in file:
+                    line=line.replace('\n','')
+                    initials.append(line)
+                file.close()
+                initials.reverse()
+
+                if len(initials)>10:
+                    del initials[-1]
                 x=-170
-                for i in listscore:
-                    x=x
-                    scobj=textbasics.render(str(i),True,WHITE)
+                for a,b in zip(listscore,initials):
+                    y=str((a,b))
+                    y=y.replace('(','')
+                    y=y.replace(')','')
+                    y=y.replace("'",'')
+                    y=y.replace(',',' - ')
+                    scobj=textbasics.render(str(y),True,WHITE)
                     scorect=scobj.get_rect()
                     scorect.centerx=DISPLAYSURF.get_rect().centerx-225
                     x=x+35
@@ -3440,6 +3543,7 @@ def hardgame2(): #level 5 and 6
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 elif score >= listscore[-1]:  # if the score is >=highscore
@@ -3452,6 +3556,7 @@ def hardgame2(): #level 5 and 6
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 #blit you win on screen
@@ -3477,7 +3582,7 @@ def hardgame2(): #level 5 and 6
                 quitrect=quitobj.get_rect()
                 quitrect.centerx=DISPLAYSURF.get_rect().centerx+90
                 quitrect.centery=DISPLAYSURF.get_rect().centery+135
-                DISPLAYSURF.blit(quitobj, quitrect)
+                DISPLAYSURF.blit(quitobj, quitrect)  
 
                 #blit top ten scores
                 textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
@@ -3486,10 +3591,25 @@ def hardgame2(): #level 5 and 6
                 toprect.centerx=DISPLAYSURF.get_rect().centerx-225
                 toprect.centery=DISPLAYSURF.get_rect().centery-170
                 DISPLAYSURF.blit(topobj,toprect)
+
+                initials=[]
+                file=open('initials.txt','r')
+                for line in file:
+                    line=line.replace('\n','')
+                    initials.append(line)
+                file.close()
+                initials.reverse()
+
+                if len(initials)>10:
+                    del initials[-1]
                 x=-170
-                for i in listscore:
-                    x=x
-                    scobj=textbasics.render(str(i),True,WHITE)
+                for a,b in zip(listscore,initials):
+                    y=str((a,b))
+                    y=y.replace('(','')
+                    y=y.replace(')','')
+                    y=y.replace("'",'')
+                    y=y.replace(',',' - ')
+                    scobj=textbasics.render(str(y),True,WHITE)
                     scorect=scobj.get_rect()
                     scorect.centerx=DISPLAYSURF.get_rect().centerx-225
                     x=x+35
@@ -4196,6 +4316,7 @@ def obstaclegame(): #level 7 and 8
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 elif score > listscore[-1]:  # if the score is >=highscore
@@ -4208,6 +4329,7 @@ def obstaclegame(): #level 7 and 8
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 #blit you win on screen
@@ -4242,16 +4364,31 @@ def obstaclegame(): #level 7 and 8
                 toprect.centerx=DISPLAYSURF.get_rect().centerx-225
                 toprect.centery=DISPLAYSURF.get_rect().centery-170
                 DISPLAYSURF.blit(topobj,toprect)
+
+                initials=[]
+                file=open('initials.txt','r')
+                for line in file:
+                    line=line.replace('\n','')
+                    initials.append(line)
+                file.close()
+                initials.reverse()
+
+                if len(initials)>10:
+                    del initials[-1]
                 x=-170
-                for i in listscore:
-                    x=x
-                    scobj=textbasics.render(str(i),True,WHITE)
+                for a,b in zip(listscore,initials):
+                    y=str((a,b))
+                    y=y.replace('(','')
+                    y=y.replace(')','')
+                    y=y.replace("'",'')
+                    y=y.replace(',',' - ')
+                    scobj=textbasics.render(str(y),True,WHITE)
                     scorect=scobj.get_rect()
                     scorect.centerx=DISPLAYSURF.get_rect().centerx-225
                     x=x+35
                     scorect.centery=DISPLAYSURF.get_rect().centery+(x)
                     DISPLAYSURF.blit(scobj,scorect)
-
+                
                 for event in pygame.event.get():
                     #if click screen, go to start screen
                     if event.type==MOUSEBUTTONDOWN:
@@ -4350,6 +4487,7 @@ def obstaclegame(): #level 7 and 8
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 elif score > listscore[-1]:  # if the score is >=highscore
@@ -4362,6 +4500,7 @@ def obstaclegame(): #level 7 and 8
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 #blit you win on screen
@@ -4387,7 +4526,7 @@ def obstaclegame(): #level 7 and 8
                 quitrect=quitobj.get_rect()
                 quitrect.centerx=DISPLAYSURF.get_rect().centerx+90
                 quitrect.centery=DISPLAYSURF.get_rect().centery+135
-                DISPLAYSURF.blit(quitobj, quitrect)
+                DISPLAYSURF.blit(quitobj, quitrect)  
 
                 #blit top ten scores
                 textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
@@ -4396,10 +4535,25 @@ def obstaclegame(): #level 7 and 8
                 toprect.centerx=DISPLAYSURF.get_rect().centerx-225
                 toprect.centery=DISPLAYSURF.get_rect().centery-170
                 DISPLAYSURF.blit(topobj,toprect)
+
+                initials=[]
+                file=open('initials.txt','r')
+                for line in file:
+                    line=line.replace('\n','')
+                    initials.append(line)
+                file.close()
+                initials.reverse()
+
+                if len(initials)>10:
+                    del initials[-1]
                 x=-170
-                for i in listscore:
-                    x=x
-                    scobj=textbasics.render(str(i),True,WHITE)
+                for a,b in zip(listscore,initials):
+                    y=str((a,b))
+                    y=y.replace('(','')
+                    y=y.replace(')','')
+                    y=y.replace("'",'')
+                    y=y.replace(',',' - ')
+                    scobj=textbasics.render(str(y),True,WHITE)
                     scorect=scobj.get_rect()
                     scorect.centerx=DISPLAYSURF.get_rect().centerx-225
                     x=x+35
@@ -5306,6 +5460,7 @@ def hardobstaclegame(): #level 9 and 10   --- NEEDS CLICK TO PLAY AGAIN
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 elif score >= listscore[-1]:  # if the score is >=highscore
@@ -5318,6 +5473,7 @@ def hardobstaclegame(): #level 9 and 10   --- NEEDS CLICK TO PLAY AGAIN
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 #blit you win on screen
@@ -5352,10 +5508,25 @@ def hardobstaclegame(): #level 9 and 10   --- NEEDS CLICK TO PLAY AGAIN
                 toprect.centerx=DISPLAYSURF.get_rect().centerx-225
                 toprect.centery=DISPLAYSURF.get_rect().centery-170
                 DISPLAYSURF.blit(topobj,toprect)
+
+                initials=[]
+                file=open('initials.txt','r')
+                for line in file:
+                    line=line.replace('\n','')
+                    initials.append(line)
+                file.close()
+                initials.reverse()
+
+                if len(initials)>10:
+                    del initials[-1]
                 x=-170
-                for i in listscore:
-                    x=x
-                    scobj=textbasics.render(str(i),True,WHITE)
+                for a,b in zip(listscore,initials):
+                    y=str((a,b))
+                    y=y.replace('(','')
+                    y=y.replace(')','')
+                    y=y.replace("'",'')
+                    y=y.replace(',',' - ')
+                    scobj=textbasics.render(str(y),True,WHITE)
                     scorect=scobj.get_rect()
                     scorect.centerx=DISPLAYSURF.get_rect().centerx-225
                     x=x+35
@@ -5463,6 +5634,7 @@ def hardobstaclegame(): #level 9 and 10   --- NEEDS CLICK TO PLAY AGAIN
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 elif score > listscore[-1]:  # if the score is >=highscore
@@ -5475,6 +5647,7 @@ def hardobstaclegame(): #level 9 and 10   --- NEEDS CLICK TO PLAY AGAIN
                         overrect.centerx = DISPLAYSURF.get_rect().centerx+90
                         overrect.centery = DISPLAYSURF.get_rect().centery - 90
                         DISPLAYSURF.blit(overobj, overrect)
+                        os.system('initialstk.py')
                         end_it = True
                     pygame.display.flip()
                 #blit you win on screen
@@ -5501,7 +5674,7 @@ def hardobstaclegame(): #level 9 and 10   --- NEEDS CLICK TO PLAY AGAIN
                 quitrect.centerx=DISPLAYSURF.get_rect().centerx+90
                 quitrect.centery=DISPLAYSURF.get_rect().centery+135
                 DISPLAYSURF.blit(quitobj, quitrect)
-
+                
                 #blit top ten scores
                 textbasics = pygame.font.Font("C:\Windows\Fonts\Calibri.ttf", 30)
                 topobj=textbasics.render('TOP TEN',True,WHITE)
@@ -5509,10 +5682,25 @@ def hardobstaclegame(): #level 9 and 10   --- NEEDS CLICK TO PLAY AGAIN
                 toprect.centerx=DISPLAYSURF.get_rect().centerx-225
                 toprect.centery=DISPLAYSURF.get_rect().centery-170
                 DISPLAYSURF.blit(topobj,toprect)
+
+                initials=[]
+                file=open('initials.txt','r')
+                for line in file:
+                    line=line.replace('\n','')
+                    initials.append(line)
+                file.close()
+                initials.reverse()
+
+                if len(initials)>10:
+                    del initials[-1]
                 x=-170
-                for i in listscore:
-                    x=x
-                    scobj=textbasics.render(str(i),True,WHITE)
+                for a,b in zip(listscore,initials):
+                    y=str((a,b))
+                    y=y.replace('(','')
+                    y=y.replace(')','')
+                    y=y.replace("'",'')
+                    y=y.replace(',',' - ')
+                    scobj=textbasics.render(str(y),True,WHITE)
                     scorect=scobj.get_rect()
                     scorect.centerx=DISPLAYSURF.get_rect().centerx-225
                     x=x+35
@@ -5585,4 +5773,4 @@ def hardobstaclegame(): #level 9 and 10   --- NEEDS CLICK TO PLAY AGAIN
         create-=1 #subtract from create to keep track of apple spawning
         all_sprites_list.remove(old_segment)
 
-cutscene()
+credit()
