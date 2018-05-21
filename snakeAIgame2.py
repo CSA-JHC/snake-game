@@ -33,6 +33,7 @@
 #level 6 = 9,10 (hardobstacle)
 
 #find credit image
+#fix initials
 
 import pygame,sys
 from pygame.locals import *
@@ -751,7 +752,7 @@ def gameover(gm,snake):
 
         pygame.display.flip()
 
-def credit():
+def credit(): ###############################
     pygame.init()
     pygame.mixer.init()
 
@@ -805,8 +806,8 @@ def cutscene():
     bite=pygame.mixer.Sound('bite.wav')
     bgmusic=pygame.mixer.Sound('playmusic.wav')
     beginmusic=pygame.mixer.Sound('intromusic.wav')
-    bgmusic.play(-1,0)
-    bgmusic.set_volume(0.3)
+    beginmusic.play(-1,0)
+    beginmusic.set_volume(0.3)
 
     #snake measurements per box
     snakeheight=20
@@ -921,24 +922,31 @@ def cutscene():
                 #when the key is pressed, change direction
                 if event.key==K_1:
                     end_it=True
+                    beginmusic.stop()
                     easygame()
                 if event.key==K_2:
                     end_it=True
+                    beginmusic.stop()
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
                     end_it=True
+                    beginmusic.stop()
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
                     end_it=True
+                    beginmusic.stop()
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
                     end_it=True
+                    beginmusic.stop()
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
                     end_it=True
+                    beginmusic.stop()
                     hardobstaclegame()
                 if event.key==K_SPACE:
                     end_it=True
+                    beginmusic.stop()
                     easygame()
                 if event.key==K_q:
                     pygame.quit()
@@ -1292,21 +1300,27 @@ def cutscene():
                     #when the key is pressed, change level
                     if event.key==K_1:
                         end_it=True
+                        beginmusic.stop()
                         easygame()
                     if event.key==K_2:
                         end_it=True
+                        beginmusic.stop()
                         mediumgame()
                     if event.key==K_3 or event.key==K_4:
                         end_it=True
+                        beginmusic.stop()
                         hardgame()
                     if event.key==K_5 or event.key==K_6:
                         end_it=True
+                        beginmusic.stop()
                         hardgame2()
                     if event.key==K_7 or event.key==K_8:
                         end_it=True
+                        beginmusic.stop()
                         obstaclegame()
                     if event.key==K_9 or event.key==K_0:
                         end_it=True
+                        beginmusic.stop()
                         hardobstaclegame()
 
                 # if quit, exit
@@ -1428,21 +1442,27 @@ def instructions():
                 #when the key is pressed, change direction
                 if event.key==K_1:
                     end_it=True
+                    beginmusic.stop()
                     easygame()
                 if event.key==K_2:
                     end_it=True
+                    beginmusic.stop()
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
                     end_it=True
+                    beginmusic.stop()
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
                     end_it=True
+                    beginmusic.stop()
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
                     end_it=True
+                    beginmusic.stop()
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
                     end_it=True
+                    beginmusic.stop()
                     hardobstaclegame()
                 if event.key==K_q:
                     pygame.quit()
@@ -1598,21 +1618,27 @@ def easygame(): #level 1
                                 easygame()
                         if event.key==K_1:
                             end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
                             end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
                             end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
                             end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
                             end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
@@ -1684,21 +1710,27 @@ def easygame(): #level 1
                 #when the key is pressed, change level
                 if event.key==K_1:
                     end_it=True
+                    bgmusic.stop()
                     easygame()
                 if event.key==K_2:
                     end_it=True
+                    bgmusic.stop()
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
                     end_it=True
+                    bgmusic.stop()
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
                     end_it=True
+                    bgmusic.stop()
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
                     end_it=True
+                    bgmusic.stop()
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
                     end_it=True
+                    bgmusic.stop()
                     hardobstaclegame()
                 if event.key==K_q:
                     pygame.quit()
@@ -1884,21 +1916,27 @@ def mediumgame(): #level 2
                         #when the key is pressed, change level
                         if event.key==K_1:
                             end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
                             end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
                             end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
                             end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
                             end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
@@ -2001,21 +2039,27 @@ def mediumgame(): #level 2
                 #when the key is pressed, change level
                 if event.key==K_1:
                     end_it=True
+                    bgmusic.stop()
                     easygame()
                 if event.key==K_2:
                     end_it=True
+                    bgmusic.stop()
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
                     end_it=True
+                    bgmusic.stop()
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
                     end_it=True
+                    bgmusic.stop()
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
                     end_it=True
+                    bgmusic.stop()
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
                     end_it=True
+                    bgmusic.stop()
                     hardobstaclegame()
                 if event.key==K_q:
                     pygame.quit()
@@ -2204,21 +2248,27 @@ def hardgame(): #level 3 and 4
                         #when the key is pressed, change level
                         if event.key==K_1:
                             end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
                             end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
                             end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
                             end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
                             end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
@@ -2365,21 +2415,27 @@ def hardgame(): #level 3 and 4
                 #when the key is pressed, change level
                 if event.key==K_1:
                     end_it=True
+                    bgmusic.stop()
                     easygame()
                 if event.key==K_2:
                     end_it=True
+                    bgmusic.stop()
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
                     end_it=True
+                    bgmusic.stop()
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
                     end_it=True
+                    bgmusic.stop()
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
                     end_it=True
+                    bgmusic.stop()
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
                     end_it=True
+                    bgmusic.stop()
                     hardobstaclegame()
                 if event.key==K_q:
                     pygame.quit()
@@ -2629,21 +2685,27 @@ def hardgame(): #level 3 and 4
                     #when the key is pressed, change level
                         if event.key==K_1:
                             end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
                             end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
                             end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
                             end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
                             end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
@@ -2801,21 +2863,27 @@ def hardgame(): #level 3 and 4
                         #when the key is pressed, change level
                         if event.key==K_1:
                             end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
                             end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
                             end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
                             end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
                             end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
@@ -2994,21 +3062,27 @@ def hardgame2(): #level 5 and 6
                         #when the key is pressed, change level
                         if event.key==K_1:
                             end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
                             end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
                             end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
                             end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
                             end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
@@ -3154,16 +3228,28 @@ def hardgame2(): #level 5 and 6
                     y_change =(snakeheight+margin)
                 #when the key is pressed, change level
                 if event.key==K_1:
+                    end_it=True
+                    bgmusic.stop()
                     easygame()
                 if event.key==K_2:
+                    end_it=True
+                    bgmusic.stop()
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
+                    end_it=True
+                    bgmusic.stop()
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
+                    end_it=True
+                    bgmusic.stop()
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
+                    end_it=True
+                    bgmusic.stop()
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
+                    end_it=True
+                    bgmusic.stop()
                     hardobstaclegame()
                 if event.key==K_q:
                     pygame.quit()
@@ -3466,21 +3552,27 @@ def hardgame2(): #level 5 and 6
                         #when the key is pressed, change level
                         if event.key==K_1:
                             end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
                             end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
                             end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
                             end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
                             end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
@@ -3637,21 +3729,27 @@ def hardgame2(): #level 5 and 6
                             cutscene()
                         if event.key==K_1:
                             end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
                             end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
                             end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
                             end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
                             end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
@@ -3830,21 +3928,27 @@ def obstaclegame(): #level 7 and 8
                         #when the key is pressed, change level
                         if event.key==K_1:
                             end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
                             end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
                             end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
                             end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
                             end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
@@ -4084,21 +4188,27 @@ def obstaclegame(): #level 7 and 8
                 #when the key is pressed, change level
                 if event.key==K_1:
                     end_it=True
+                    bgmusic.stop()
                     easygame()
                 if event.key==K_2:
                     end_it=True
+                    bgmusic.stop()
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
                     end_it=True
+                    bgmusic.stop()
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
                     end_it=True
+                    bgmusic.stop()
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
                     end_it=True
+                    bgmusic.stop()
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
                     end_it=True
+                    bgmusic.stop()
                     hardobstaclegame()
                 if event.key==K_q:
                     pygame.quit()
@@ -4410,21 +4520,27 @@ def obstaclegame(): #level 7 and 8
                         #when the key is pressed, change level
                         if event.key==K_1:
                             end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
                             end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
                             end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
                             end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
                             end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
@@ -4581,21 +4697,27 @@ def obstaclegame(): #level 7 and 8
                         #when the key is pressed, change level
                         if event.key==K_1:
                             end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
                             end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
                             end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
                             end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
                             end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
                             end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
@@ -4819,16 +4941,28 @@ def hardobstaclegame(): #level 9 and 10   --- NEEDS CLICK TO PLAY AGAIN
                                 hardobstaclegame()
                         #when the key is pressed, change level
                         if event.key==K_1:
+                            end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
+                            end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
@@ -5413,16 +5547,28 @@ def hardobstaclegame(): #level 9 and 10   --- NEEDS CLICK TO PLAY AGAIN
                     y_change =(snakeheight+margin)
                 #when the key is pressed, change level
                 if event.key==K_1:
+                    end_it=True
+                    bgmusic.stop()
                     easygame()
                 if event.key==K_2:
+                    end_it=True
+                    bgmusic.stop()
                     mediumgame()
                 if event.key==K_3 or event.key==K_4:
+                    end_it=True
+                    bgmusic.stop()
                     hardgame()
                 if event.key==K_5 or event.key==K_6:
+                    end_it=True
+                    bgmusic.stop()
                     hardgame2()
                 if event.key==K_7 or event.key==K_8:
+                    end_it=True
+                    bgmusic.stop()
                     obstaclegame()
                 if event.key==K_9 or event.key==K_0:
+                    end_it=True
+                    bgmusic.stop()
                     hardobstaclegame()
                 if event.key==K_q:
                     pygame.quit()
@@ -5552,16 +5698,28 @@ def hardobstaclegame(): #level 9 and 10   --- NEEDS CLICK TO PLAY AGAIN
                             cutscene()
                         #when the key is pressed, change level
                         if event.key==K_1:
+                            end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
+                            end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
@@ -5726,16 +5884,28 @@ def hardobstaclegame(): #level 9 and 10   --- NEEDS CLICK TO PLAY AGAIN
                             cutscene()
                         #when the key is pressed, change level
                         if event.key==K_1:
+                            end_it=True
+                            bgmusic.stop()
                             easygame()
                         if event.key==K_2:
+                            end_it=True
+                            bgmusic.stop()
                             mediumgame()
                         if event.key==K_3 or event.key==K_4:
+                            end_it=True
+                            bgmusic.stop()
                             hardgame()
                         if event.key==K_5 or event.key==K_6:
+                            end_it=True
+                            bgmusic.stop()
                             hardgame2()
                         if event.key==K_7 or event.key==K_8:
+                            end_it=True
+                            bgmusic.stop()
                             obstaclegame()
                         if event.key==K_9 or event.key==K_0:
+                            end_it=True
+                            bgmusic.stop()
                             hardobstaclegame()
                         if event.key==K_q:
                             pygame.quit()
