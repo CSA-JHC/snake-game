@@ -32,9 +32,6 @@
 #level 5 = 7,8 (obstacle)
 #level 6 = 9,10 (hardobstacle)
 
-#find credit image
-#fix initials
-
 import pygame,sys
 from pygame.locals import *
 import random
