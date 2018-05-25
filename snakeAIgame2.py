@@ -24,14 +24,6 @@
 ##by eating the red apples. The green apples makes you lose a point.
 ##Levels increase based on the amount of points you have.
 
-#CHEAT CODES
-#level 1 = 1 (easy)
-#level 2 = 2 (medium)
-#level 3 = 3,4 (hard)
-#level 4 = 5,6 (hard2)
-#level 5 = 7,8 (obstacle)
-#level 6 = 9,10 (hardobstacle)
-
 import pygame,sys
 from pygame.locals import *
 import random
